@@ -1,0 +1,38 @@
+{
+  "bts": [
+    "clean_devices",
+    "clean_pins",
+    "clean_wafer_id",
+    "contaminated_devices",
+    "contaminated_pins",
+    "contaminated_wafer_id",
+    "max_stress_time",
+    "stress_interval",
+    "stress_temperature",
+    "stress_voltage",
+    "temperature_sampling_interval",
+    "thickness"
+  ],
+  "cv_sweep": [
+    "sweep_direction",
+    "frequency,",
+    "integration_time",
+    "osc_amplitude",
+    "number_of_averages",
+    "voltage_start",
+    "voltage_stop",
+    "voltage_step"
+  ],
+  "dlcp" : [
+    "integration_time",
+    "number_of_averages",
+    "amplitude_start",
+    "amplitude_step",
+    "amplitude_stop",
+    "frequency",
+    "nominal_bias"
+  ],
+  "general": [
+    "base_path"
+  ]
+}

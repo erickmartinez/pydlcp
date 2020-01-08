@@ -1,0 +1,4 @@
+*.pyc
+DLCP_App_environment_setup.txt
+.idea*
+*__pycache__*

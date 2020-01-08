@@ -1,0 +1,32 @@
+{
+    "global": [
+      "test_units"
+    ],
+    "impedance_analyzer": [
+      "address",
+      "name"
+    ],
+    "keithley": [
+      "address",
+      "name"
+    ],
+    "arduino": [
+      "address",
+      "name",
+      "pin_keithley",
+      "pin_fan",
+      "pin_thermocouple",
+      "pin_1",
+      "pin_2",
+      "pin_3",
+      "pin_4",
+      "pin_5",
+      "pin_6",
+      "pin_7",
+      "pin_8"
+    ],
+    "hotplate": [
+      "address",
+      "name"
+    ]
+}
