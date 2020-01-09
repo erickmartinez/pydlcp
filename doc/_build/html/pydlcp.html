@@ -1,0 +1,2446 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pydlcp package &mdash; pydlcp  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pydlcp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">pydlcp package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-pydlcp.arduino_board">pydlcp.arduino_board module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.bts">pydlcp.bts module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.controller">pydlcp.controller module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.datastorage">pydlcp.datastorage module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.errors">pydlcp.errors module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.hotplate">pydlcp.hotplate module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.impedance_analyzer">pydlcp.impedance_analyzer module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.keithley">pydlcp.keithley module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.plotting">pydlcp.plotting module</a></li>
+<li><a class="reference internal" href="#module-pydlcp.visa_instrument">pydlcp.visa_instrument module</a></li>
+<li><a class="reference internal" href="#module-pydlcp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pydlcp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>pydlcp package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/pydlcp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pydlcp-package">
+<h1>pydlcp package<a class="headerlink" href="#pydlcp-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pydlcp.arduino_board">
+<span id="pydlcp-arduino-board-module"></span><h2>pydlcp.arduino_board module<a class="headerlink" href="#module-pydlcp.arduino_board" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.arduino_board.ArduinoBoard">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.arduino_board.</code><code class="sig-name descname">ArduinoBoard</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">name: str</em>, <em class="sig-param">pin_mappings: dict</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class provides basic control to an Arduino board running a serial controller</p>
+<p>…</p>
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._activePins">
+<code class="sig-name descname">_activePins</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._activePins" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pins that are currently active</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._board">
+<code class="sig-name descname">_board</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._board" title="Permalink to this definition">¶</a></dt>
+<dd><p>The serial connection to the arduino board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>serial.Serial</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._boardConnected">
+<code class="sig-name descname">_boardConnected</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._boardConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the serial connection to the board is open, false otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._pinMappings">
+<code class="sig-name descname">_pinMappings</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._pinMappings" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing the map of pins for different functionalities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._fanOn">
+<code class="sig-name descname">_fanOn</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._fanOn" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the fan is on false otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.arduino_board.ArduinoBoard._keithleyConnected">
+<code class="sig-name descname">_keithleyConnected</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._keithleyConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if all the measuring pins are connected to the keithley source meter, false if they are connected to the
+impedance analyzer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">connect(self):</code></dt>
+<dd><p>Opens the serial connection to the arduino server</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">disconnect(self):</code></dt>
+<dd><p>Closes the serial connection to the arduino server</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">connect_keithley(self):</code></dt>
+<dd><p>Triggers the relay to connect all the measuring pins to the keithley source meter instead of having them
+connected to the impedance analyzer</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">pin_on(self, pin_number: int):</code></dt>
+<dd><p>Triggers the relay to turn the specified pin on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">pin_off(self, pin_number: int):</code></dt>
+<dd><p>Triggers the relay to turn the specified pin off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">fan_on(self):</code></dt>
+<dd><p>Triggers the relay to turn the fan on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">fan_off(self):</code></dt>
+<dd><p>Triggers the relay to turn the fan off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">disconnect_all_pins(self):</code></dt>
+<dd><p>Disconnects all measuring pins.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">connect_all_pins(self):</code></dt>
+<dd><p>Connects all measuring pins.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">temperature(self):</code></dt>
+<dd><p>Reads the temperature from the MAX31855 thermocouple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">set_logger(self, logger: logging.Logger):</code></dt>
+<dd><p>Sets the logger that will handle the workflow messages instead of python’s print.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">create_serial_server(self):</code></dt>
+<dd><p>Creates an arduino sketch file containing a code to setup a serial server to controll the test unit. Then it
+verifies it and uploads it to the arduino board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_board_write(self, command: str):</code></dt>
+<dd><p>Sends a command to the arduino controller using serial communication</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard._board_query">
+<code class="sig-name descname">_board_query</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">command: str</em><span class="sig-paren">)</span> &#x2192; str:<a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._board_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the arduino controller and reads the output using serial communication</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_print(self, msg: str, level=&quot;INFO&quot;):</code></dt>
+<dd><p>Prints a system message. If a logger is specified, handles the message with the logger, else it prints it to the
+console using ‘print’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard._create_path">
+<code class="sig-name descname">_create_path</code><span class="sig-paren">(</span><em class="sig-param">path: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard._create_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a path if it does not exist. Used to create the directory structure for the arduino sketches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the serial communication with the Arduino controller</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.connect_all_pins">
+<code class="sig-name descname">connect_all_pins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.connect_all_pins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects all measuring pins (by default, to the Impedance Analyzer).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.connect_keithley">
+<code class="sig-name descname">connect_keithley</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.connect_keithley" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to connect the sample pins to the Keithley source-meter</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the Keithley source-meter was already connected.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.create_serial_server">
+<code class="sig-name descname">create_serial_server</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.create_serial_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an Arduino sketch that defines the logic of the Arduino board and creates a Serial controller to
+access the logic on the Arduino through a PC.</p>
+<p>The configuration of the pins on the sketch is injected from the
+pinMappings by substituting the right placeholders on a template file. It then generates a sketch folder with
+the .ino files. The method uses arduino.exe to verify and upload the sketch to the Arduino board in the selected
+port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>subprocess.CalledProcessError</strong> – If there is a problem compiling or uplading the sketch to the board.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.disconnect">
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the serial connection with the Arduino controller</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.disconnect_all_pins">
+<code class="sig-name descname">disconnect_all_pins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.disconnect_all_pins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects all measuring pins from the instruments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.disconnect_keithley">
+<code class="sig-name descname">disconnect_keithley</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.disconnect_keithley" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to disconnect the sample pins to the Keithley source-meter.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the Keithley source meter was already disconnected.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.fan_off">
+<code class="sig-name descname">fan_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.fan_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to turn the fan off.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the fan was already off.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.fan_on">
+<code class="sig-name descname">fan_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.fan_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to turn the fan on for the current board.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the fan was already on.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.fan_status">
+<em class="property">property </em><code class="sig-name descname">fan_status</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.fan_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.keithley_connected">
+<em class="property">property </em><code class="sig-name descname">keithley_connected</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.keithley_connected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.pin_off">
+<code class="sig-name descname">pin_off</code><span class="sig-paren">(</span><em class="sig-param">pin_number: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.pin_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to turn the specified pin off
+:param pin_number: The number of the pin to turn on
+:type pin_number: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydlcp.errors.ArduinoError" title="pydlcp.errors.ArduinoError"><strong>errors.ArduinoError</strong></a> – If the number of the pin is not within the pins defined in _pinMappings</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the pin was already disconnected.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.pin_on">
+<code class="sig-name descname">pin_on</code><span class="sig-paren">(</span><em class="sig-param">pin_number: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.pin_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers the relay to turn the specified pin on
+:param pin_number: The number of the pin to turn on
+:type pin_number: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydlcp.errors.ArduinoError" title="pydlcp.errors.ArduinoError"><strong>errors.ArduinoError</strong></a> – If the number of the pin is not within the pins defined in _pinMappings</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the pin was already connected.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.set_logger">
+<code class="sig-name descname">set_logger</code><span class="sig-paren">(</span><em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.set_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a logger for the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> (<em>logger: logging.Logger</em>) – A logger</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the provided logger is not an instance of logging.Logger.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.arduino_board.ArduinoBoard.temperature">
+<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#pydlcp.arduino_board.ArduinoBoard.temperature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.bts">
+<span id="pydlcp-bts-module"></span><h2>pydlcp.bts module<a class="headerlink" href="#module-pydlcp.bts" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.bts.BTS">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.bts.</code><code class="sig-name descname">BTS</code><span class="sig-paren">(</span><em class="sig-param">temperature: float</em>, <em class="sig-param">bias: float</em>, <em class="sig-param">stress_interval: int</em>, <em class="sig-param">temperature_sampling_interval: int</em>, <em class="sig-param">max_time: float</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.bts.BTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents a bias-temperature stress (BTS) measurement</p>
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._accumulatedStressTime">
+<code class="sig-name descname">_accumulatedStressTime</code><a class="headerlink" href="#pydlcp.bts.BTS._accumulatedStressTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current accumulated stress time in seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._bias">
+<code class="sig-name descname">_bias</code><a class="headerlink" href="#pydlcp.bts.BTS._bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stress bias in volts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._intervalProgress">
+<code class="sig-name descname">_intervalProgress</code><a class="headerlink" href="#pydlcp.bts.BTS._intervalProgress" title="Permalink to this definition">¶</a></dt>
+<dd><p>A counter for the number of interval stresses being applied so far</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._intervals">
+<code class="sig-name descname">_intervals</code><a class="headerlink" href="#pydlcp.bts.BTS._intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of intervals needed to complete a stress time of _maxTime</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._maxTime">
+<code class="sig-name descname">_maxTime</code><a class="headerlink" href="#pydlcp.bts.BTS._maxTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total stress time in seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._startTime">
+<code class="sig-name descname">_startTime</code><a class="headerlink" href="#pydlcp.bts.BTS._startTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The startTime of the measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._start_bts_interval">
+<code class="sig-name descname">_start_bts_interval</code><a class="headerlink" href="#pydlcp.bts.BTS._start_bts_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time at which the current bias stress was initiated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.bts.BTS._status">
+<code class="sig-name descname">_status</code><a class="headerlink" href="#pydlcp.bts.BTS._status" title="Permalink to this definition">¶</a></dt>
+<dd><p>The status of the measuement:
+status must be a value in
+[‘idle’, ‘heating_up’, ‘cooling_down’, ‘running_stress’, ‘running_cv’, ‘running_dlcp’, ‘finished’]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.set_start_time">
+<code class="sig-name descname">set_start_time</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">start_datetime: datetime</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.bts.BTS.set_start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the start of the BTS measurement</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">start_bts_interval(self):</code></dt>
+<dd><p>The time at which the last bias stress was initiated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.time_delta_total">
+<code class="sig-name descname">time_delta_total</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">current_datetime: datetime</em><span class="sig-paren">)</span> &#x2192; float:<a class="headerlink" href="#pydlcp.bts.BTS.time_delta_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a timedelta in seconds between the provided datetime and the datetime at the beginning of the
+experiment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.time_delta_bts">
+<code class="sig-name descname">time_delta_bts</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">current_datetime: datetime</em><span class="sig-paren">)</span> &#x2192; float:<a class="headerlink" href="#pydlcp.bts.BTS.time_delta_bts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a timedelta in seconds between the provided datetime and the datetime at the beginning of the last
+voltage stress.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.temperature">
+<code class="sig-name descname">temperature</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; int:<a class="headerlink" href="#pydlcp.bts.BTS.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stress temperature in °C</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.bias">
+<code class="sig-name descname">bias</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; float:<a class="headerlink" href="#pydlcp.bts.BTS.bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stress bias in (V)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.stress_interval">
+<code class="sig-name descname">stress_interval</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; int:<a class="headerlink" href="#pydlcp.bts.BTS.stress_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stress interval in seconds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.temperature_sampling_interval">
+<code class="sig-name descname">temperature_sampling_interval</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; int:<a class="headerlink" href="#pydlcp.bts.BTS.temperature_sampling_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The temperature sampling interval in seconds</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">accumulate_interval(self, dt: float):</code></dt>
+<dd><p>Increases the interval counter and adds the estimated stress time to the accumulatedStresTime property.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">max_time(self):</code></dt>
+<dd><p>The target total stress time in seconds</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">append_device(self, device: str, pin: int, h5_storage: datastorage.H5Store, clean: bool = True):</code></dt>
+<dd><p>Appends a device to the BTS measurement. A devices is a physical MIS structure. A convened named is used and
+a respective pin in the measurement unit must be provided, as well as the H5 datastorage for this device.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.get_device_storage">
+<code class="sig-name descname">get_device_storage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">device: str</em>, <em class="sig-param">clean: bool = True</em><span class="sig-paren">)</span> &#x2192; datastorage.H5Store:<a class="headerlink" href="#pydlcp.bts.BTS.get_device_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the datastorage.H5Storage for the selected device.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.accumulate_interval">
+<code class="sig-name descname">accumulate_interval</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.bts.BTS.accumulate_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>After bias-temperature stress interval has completed accumulates the total stress time and increases the
+interval counter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – The amount of time kept under stress during the present interval (seconds).</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If dt is not float or int</p></li>
+<li><p><strong>ValueError</strong> – If dt &lt; 0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.accumulated_stress_time">
+<em class="property">property </em><code class="sig-name descname">accumulated_stress_time</code><a class="headerlink" href="#pydlcp.bts.BTS.accumulated_stress_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.append_device">
+<code class="sig-name descname">append_device</code><span class="sig-paren">(</span><em class="sig-param">device: str</em>, <em class="sig-param">pin: int</em>, <em class="sig-param">h5_storage: pydlcp.datastorage.H5Store</em>, <em class="sig-param">clean: bool = True</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.bts.BTS.append_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a device to the BTS experiment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>str</em>) – The device id</p></li>
+<li><p><strong>pin</strong> (<em>int</em>) – The pin in the test unit, to which the device is attached.</p></li>
+<li><p><strong>h5_storage</strong> (<a class="reference internal" href="#pydlcp.datastorage.H5Store" title="pydlcp.datastorage.H5Store"><em>datastorage.H5Store</em></a>) – The h5Store on which the data is saved.</p></li>
+<li><p><strong>clean</strong> (<em>bool</em>) – True if the device does not contain sodium, false otherwise.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">bias</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.clean_devices">
+<em class="property">property </em><code class="sig-name descname">clean_devices</code><a class="headerlink" href="#pydlcp.bts.BTS.clean_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.clean_pins">
+<em class="property">property </em><code class="sig-name descname">clean_pins</code><a class="headerlink" href="#pydlcp.bts.BTS.clean_pins" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.contaminated_devices">
+<em class="property">property </em><code class="sig-name descname">contaminated_devices</code><a class="headerlink" href="#pydlcp.bts.BTS.contaminated_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.contaminated_pins">
+<em class="property">property </em><code class="sig-name descname">contaminated_pins</code><a class="headerlink" href="#pydlcp.bts.BTS.contaminated_pins" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_device_storage</code><span class="sig-paren">(</span><em class="sig-param">device: str</em>, <em class="sig-param">clean: bool = True</em><span class="sig-paren">)</span> &#x2192; pydlcp.datastorage.H5Store</dt>
+<dd><p>Returns the H5 Datastore to the selected device</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>str</em>) – The device id</p></li>
+<li><p><strong>clean</strong> (<em>bool</em>) – True if the device does not contain sodium contamination, false otherwise.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The H5 Datastore to the selcted device</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydlcp.datastorage.H5Store" title="pydlcp.datastorage.H5Store">datastorage.H5Store</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.interval_progress">
+<em class="property">property </em><code class="sig-name descname">interval_progress</code><a class="headerlink" href="#pydlcp.bts.BTS.interval_progress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.max_time">
+<em class="property">property </em><code class="sig-name descname">max_time</code><a class="headerlink" href="#pydlcp.bts.BTS.max_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">set_start_time</code><span class="sig-paren">(</span><em class="sig-param">start_datetime: datetime.datetime</em><span class="sig-paren">)</span></dt>
+<dd><p>Sets the start time for the BTS Measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>start_datetime</strong> (<em>datetime</em>) – The datetime object representing the date at which the BTS measurement started</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If The argument is not an instance of datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.start_bts_interval">
+<em class="property">property </em><code class="sig-name descname">start_bts_interval</code><a class="headerlink" href="#pydlcp.bts.BTS.start_bts_interval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.bts.BTS.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pydlcp.bts.BTS.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">stress_interval</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">temperature</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">temperature_sampling_interval</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">time_delta_bts</code><span class="sig-paren">(</span><em class="sig-param">current_datetime: datetime.datetime</em><span class="sig-paren">)</span> &#x2192; float</dt>
+<dd><p>Returns the timedelta between the provided datetime and the datetime at the beginning of the last
+bias stress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>current_datetime</strong> (<em>datetime</em>) – The date and time</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The difference in time (in seconds).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the provided current_datetime is not an instance of datetime.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">time_delta_total</code><span class="sig-paren">(</span><em class="sig-param">current_datetime: datetime.datetime</em><span class="sig-paren">)</span> &#x2192; float</dt>
+<dd><p>Returns the timedelta between the provided datetime and the datetime at the beginning of the measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>current_datetime</strong> (<em>datetime</em>) – The date and time</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The difference in time (in seconds).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the provided current_datetime is not an instance of datetime.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.controller">
+<span id="pydlcp-controller-module"></span><h2>pydlcp.controller module<a class="headerlink" href="#module-pydlcp.controller" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.controller.Controller">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.controller.</code><code class="sig-name descname">Controller</code><span class="sig-paren">(</span><em class="sig-param">config_file_url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class provides methods to control a BTS and DLCP experiment interacting with different instruments and saving
+to a h5 data store.</p>
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._activeCVUnit">
+<code class="sig-name descname">_activeCVUnit</code><a class="headerlink" href="#pydlcp.controller.Controller._activeCVUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unit that the impedance analyzer is currently locked to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._arduinos">
+<code class="sig-name descname">_arduinos</code><a class="headerlink" href="#pydlcp.controller.Controller._arduinos" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list with handles to different ArduinoBoard instances controlling the different test units.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._availableResources">
+<code class="sig-name descname">_availableResources</code><a class="headerlink" href="#pydlcp.controller.Controller._availableResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of available pyvisa resources. Used to verify that the resource given by the constructor is available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._btsAcquisitions">
+<code class="sig-name descname">_btsAcquisitions</code><a class="headerlink" href="#pydlcp.controller.Controller._btsAcquisitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list with the different BTS instances representing a different experimental BTS condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bts_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._cvSweepParams">
+<code class="sig-name descname">_cvSweepParams</code><a class="headerlink" href="#pydlcp.controller.Controller._cvSweepParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with the CV sweep acquisition parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._data_paths">
+<code class="sig-name descname">_data_paths</code><a class="headerlink" href="#pydlcp.controller.Controller._data_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list containing the paths where the output data a logs will be saved</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller.debug">
+<code class="sig-name descname">debug</code><a class="headerlink" href="#pydlcp.controller.Controller.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if we want to execute in debugging mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._configMeasurementRequiredOptions">
+<code class="sig-name descname">_configMeasurementRequiredOptions</code><a class="headerlink" href="#pydlcp.controller.Controller._configMeasurementRequiredOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing rules for validating the acquisition parameters and settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._configSystemRequiredOptions">
+<code class="sig-name descname">_configSystemRequiredOptions</code><a class="headerlink" href="#pydlcp.controller.Controller._configSystemRequiredOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing rules for validating the system configuration if it is not in its default state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._dlcpParams">
+<code class="sig-name descname">_dlcpParams</code><a class="headerlink" href="#pydlcp.controller.Controller._dlcpParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with the DLCP acquisition parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._finishedUnits">
+<code class="sig-name descname">_finishedUnits</code><a class="headerlink" href="#pydlcp.controller.Controller._finishedUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list with the number ids of the units that completed the BTS measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._hotPlates">
+<code class="sig-name descname">_hotPlates</code><a class="headerlink" href="#pydlcp.controller.Controller._hotPlates" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list containing instances of the hotplates that control the temperature on each test unit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>hp_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._impedanceAnalyzer">
+<code class="sig-name descname">_impedanceAnalyzer</code><a class="headerlink" href="#pydlcp.controller.Controller._impedanceAnalyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance to the impedance analyzer object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ia.ImpedanceAnalyzer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._keithley">
+<code class="sig-name descname">_keithley</code><a class="headerlink" href="#pydlcp.controller.Controller._keithley" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance to the keithley source-meter object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydlcp.keithley.Keithley" title="pydlcp.keithley.Keithley">keithley.Keithley</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._loggingLevels">
+<code class="sig-name descname">_loggingLevels</code><a class="headerlink" href="#pydlcp.controller.Controller._loggingLevels" title="Permalink to this definition">¶</a></dt>
+<dd><p>A map of logging level strings to integers, as defined in the logging module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._mainLogger">
+<code class="sig-name descname">_mainLogger</code><a class="headerlink" href="#pydlcp.controller.Controller._mainLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logger to the class, used to handle any messages within the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._measurementConfig">
+<code class="sig-name descname">_measurementConfig</code><a class="headerlink" href="#pydlcp.controller.Controller._measurementConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of ConfigParser that contains all the acquisition parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>config.ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._physicalTestUnits">
+<code class="sig-name descname">_physicalTestUnits</code><a class="headerlink" href="#pydlcp.controller.Controller._physicalTestUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of hardware units available for use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._resourceManager">
+<code class="sig-name descname">_resourceManager</code><a class="headerlink" href="#pydlcp.controller.Controller._resourceManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of pyvisa’s resource manager to instantiate the instruments from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyvisa.highlevel.ResourceManager</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._scheduler">
+<code class="sig-name descname">_scheduler</code><a class="headerlink" href="#pydlcp.controller.Controller._scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of the BackgroundScheduler</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>BackgroundScheduler</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._schedulerRunning">
+<code class="sig-name descname">_schedulerRunning</code><a class="headerlink" href="#pydlcp.controller.Controller._schedulerRunning" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the scheduler is running, false otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller._testUnits">
+<code class="sig-name descname">_testUnits</code><a class="headerlink" href="#pydlcp.controller.Controller._testUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of test units configured to use in the BTS measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">ramp_up(self, test_unit: int):</code></dt>
+<dd><p>Set’s the hotplate temperature to the stress temperature. And sets the BTS flag to ‘heating_up’. If the unit’s
+fan is currently on, turns it off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">ramp_down(self, test_unit: int):</code></dt>
+<dd><p>Set the hotplate temperature to 25 °C and turns the unit’s fan on if it is off. Sets the BTS flag to
+‘cooling_down’. Disconnects all the pins in the test unit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">start_temperature_log(self, test_unit: int):</code></dt>
+<dd><p>Starts the temperature log. Instructs the scheduler to call the method ‘_log_temperature’ according to the
+configured setting. Starts the class scheduler if it is not already running. Sets the ‘_schedulerRunning’ to
+True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">start_bts(self, test_unit: int):</code></dt>
+<dd><p>Starts the bias-temperature stress. This method should be called once the test unit has reached the stress
+temperature. It turn’s on the voltage (connects all pins on the unit to the voltage source and turns the source
+on if it is not on already). Set the BTS flag to ‘running_stress’. Instructs the scheduler to call the method
+‘stop_bts’ at time 1 stress_interval unit time later than the current time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">stop_bts(self, test_unit: int):</code></dt>
+<dd><p>Calls ‘ramp_down’ method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_log_temperature(self, test_unit: int):</code></dt>
+<dd><p>Measures the temperature and leakage current through all the devices connected in parallel to the keithley
+source meter and saves the log to each of the device’s datastores.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.init_arduino_boards">
+<code class="sig-name descname">init_arduino_boards</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.init_arduino_boards" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.init_hotplates">
+<code class="sig-name descname">init_hotplates</code><span class="sig-paren">(</span><em class="sig-param">calibration_file: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.init_hotplates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.init_impedance_analyzer">
+<code class="sig-name descname">init_impedance_analyzer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.init_impedance_analyzer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.init_keithley">
+<code class="sig-name descname">init_keithley</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.init_keithley" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.load_test_config">
+<code class="sig-name descname">load_test_config</code><span class="sig-paren">(</span><em class="sig-param">config: configparser.ConfigParser</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.load_test_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.ramp_down">
+<code class="sig-name descname">ramp_down</code><span class="sig-paren">(</span><em class="sig-param">test_unit: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.ramp_down" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.ramp_up">
+<code class="sig-name descname">ramp_up</code><span class="sig-paren">(</span><em class="sig-param">test_unit: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.ramp_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.resource_available">
+<code class="sig-name descname">resource_available</code><span class="sig-paren">(</span><em class="sig-param">resource_address: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.resource_available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.start_bts">
+<code class="sig-name descname">start_bts</code><span class="sig-paren">(</span><em class="sig-param">test_unit: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.start_bts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.start_measurement">
+<code class="sig-name descname">start_measurement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.start_measurement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.start_temperature_log">
+<code class="sig-name descname">start_temperature_log</code><span class="sig-paren">(</span><em class="sig-param">test_unit: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.start_temperature_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.stop_bts">
+<code class="sig-name descname">stop_bts</code><span class="sig-paren">(</span><em class="sig-param">test_unit: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.stop_bts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.datastorage">
+<span id="pydlcp-datastorage-module"></span><h2>pydlcp.datastorage module<a class="headerlink" href="#module-pydlcp.datastorage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.datastorage.H5Store">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.datastorage.</code><code class="sig-name descname">H5Store</code><span class="sig-paren">(</span><em class="sig-param">filename: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class provides methods to save and access BTS experimental results to an hdf5 file</p>
+<dl class="attribute">
+<dt id="pydlcp.datastorage.H5Store._filename">
+<code class="sig-name descname">_filename</code><a class="headerlink" href="#pydlcp.datastorage.H5Store._filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The path to the h5 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_create_h5(self):</code></dt>
+<dd><p>Creates the h5 file and adds the basic structure containing 3 groups
+‘/logs’</p>
+<blockquote>
+<div><p>A group to store all logs</p>
+</div></blockquote>
+<dl class="simple">
+<dt>‘/logs/temperature_and_current’</dt><dd><p>A dataset that stores the temperautre and leakage current every x-seconds</p>
+</dd>
+<dt>‘/bts’</dt><dd><p>A group to store al the bias-temperature CV results</p>
+</dd>
+<dt>‘/bts/time’</dt><dd><p>A 1D dataset containing the timedelta at which each CV was taken</p>
+</dd>
+<dt>‘/bts/voltage’</dt><dd><p>A Matrix containing the voltage sweep at each timedelta</p>
+</dd>
+<dt>‘/bts/capacitance’</dt><dd><p>A Matrix containing the capacitance from the CV sweep</p>
+</dd>
+<dt>‘/bts/resistance’</dt><dd><p>A Matrix containing Rs from the CV sweep.</p>
+</dd>
+<dt>‘/dlcp’</dt><dd><p>A group containing al DLCP results</p>
+</dd>
+<dt>‘/dlcp/time’</dt><dd><p>A 1D dataset containing the timedelta at which each DLCP sweep was taken</p>
+</dd>
+<dt>‘/dlcp/osc_level’</dt><dd><p>A Matrix containing the osc_level sweep at each timedelta</p>
+</dd>
+<dt>‘/dlcp/bias’</dt><dd><p>A Matrix containing the voltage sweep at each timedelta</p>
+</dd>
+<dt>‘/dlcp/nominal_bias’</dt><dd><p>A Matrix containing the voltage sweep at each timedelta</p>
+</dd>
+<dt>‘/dlcp/voltage’</dt><dd><p>A Matrix containing the voltage sweep at each timedelta</p>
+</dd>
+<dt>‘/dlcp/capacitance’</dt><dd><p>A Matrix containing the capacitance from the DLCP sweep</p>
+</dd>
+<dt>‘/dlcp/resistance’</dt><dd><p>A Matrix containing Rs from the CV sweep.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">create_temperature_log(self):</code></dt>
+<dd><p>Creates the resizable dataset “/logs/temperature_and_current” on the h5 file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">log_temperature_current(self, time: float, temperature: float, current: float):</code></dt>
+<dd><p>Appends the temperature and current readings at time ‘t’ to the ‘/logs/temperature_and_current’ dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_bts_cv(self):</code></dt>
+<dd><p>Returns the stress_time, voltage, capacitance and resistance datasets in the /bts group</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_dlcp_data(self):</code></dt>
+<dd><p>Returns the stress_time, osc_level, bias, nominal_bias, voltage, capacitance and resistance datasets in
+the /dlcp group</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.get_bts_cv_at_time">
+<code class="sig-name descname">get_bts_cv_at_time</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time_idx: int</em><span class="sig-paren">)</span> &#x2192; vcr_type:<a class="headerlink" href="#pydlcp.datastorage.H5Store.get_bts_cv_at_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a single CV sweep result at an specific time index</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_bts_temperature(self):</code></dt>
+<dd><p>Returns the temperature log</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">append_cv(self, time: float, cv_data: vcr_type):</code></dt>
+<dd><p>Appends a CV sweep result (vcr_type) to the /bts group</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">append_dlcp(self, time: float, dlcp_data: dlcp_type):</code></dt>
+<dd><p>Appends a DLCP sweep result (dlcp_type) to the /dlcp group</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_append_resizeble_dataset(self, group_name: str, data_set_name: str, data):</code></dt>
+<dd><p>Appends data to a resizable dataset in the h5 file</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">metadata(self, metadata: dict, group=&quot;/&quot;):</code></dt>
+<dd><p>Appends dictionary key values as attributes to the selected group/dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">create_resizeable_dataset(self, name: str, size: (int, int), group_name: str, dtype=None):</code></dt>
+<dd><p>Creates a resizable dataset on a specific group in the h5 file</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">create_fixed_dataset(self, name: str, size: (int, int), group_name: str, dtype=None):</code></dt>
+<dd><p>Creates a dataset that cannot be resized on a specific group in the h5 file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.append_cv">
+<code class="sig-name descname">append_cv</code><span class="sig-paren">(</span><em class="sig-param">time: [&lt;class 'float'&gt;, &lt;class 'int'&gt;], cv_data: dtype([('V', '&lt;f8'), ('C', '&lt;f8'), ('R', '&lt;f8')])</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.append_cv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a CV sweep to the H5 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – The time delta at which the measurement was taken.</p></li>
+<li><p><strong>cv_data</strong> (<em>[</em><em>vcr_type</em><em>, </em><em>np.ndarray</em><em>(</em><em>vcr_type</em><em>)</em>) – The CV sweep</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.append_dlcp">
+<code class="sig-name descname">append_dlcp</code><span class="sig-paren">(</span><em class="sig-param">time: [&lt;class 'float'&gt;, &lt;class 'int'&gt;], dlcp_data: dtype([('osc_level', '&lt;f8'), ('bias', '&lt;f8'), ('nominal_bias', '&lt;f8'), ('V', '&lt;f8'), ('C', '&lt;f8'), ('R', '&lt;f8')])</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.append_dlcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a DLCP sweep to the H5 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>[</em><em>float</em><em>, </em><em>int</em><em>]</em>) – The time delta at which the DLCP measurement was performed</p></li>
+<li><p><strong>dlcp_data</strong> (<em>[</em><em>dlcp_dtype</em><em>, </em><em>np.ndarray</em><em>(</em><em>dlcp_type</em><em>)</em>) – The DLCP data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.create_fixed_dataset">
+<code class="sig-name descname">create_fixed_dataset</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">size: (&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;)</em>, <em class="sig-param">group_name: str</em>, <em class="sig-param">dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.create_fixed_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a non-resizable dataset in the group ‘group_name’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the dataset</p></li>
+<li><p><strong>size</strong> (<em>(</em><em>int</em><em>, </em><em>int</em><em>)</em>) – The shape of the dataset</p></li>
+<li><p><strong>group_name</strong> (<em>str</em>) – The name of the group to save the dataset to</p></li>
+<li><p><strong>dtype</strong> (<em>np.dtype</em>) – The type of the data being store</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.create_resizeable_dataset">
+<code class="sig-name descname">create_resizeable_dataset</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">size: (&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;)</em>, <em class="sig-param">group_name: str</em>, <em class="sig-param">dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.create_resizeable_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a resizable dataset in the group ‘group_name’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the dataset</p></li>
+<li><p><strong>size</strong> (<em>(</em><em>int</em><em>, </em><em>int</em><em>)</em>) – The shape of the dataset</p></li>
+<li><p><strong>group_name</strong> (<em>str</em>) – The name of the group to save the dataset to</p></li>
+<li><p><strong>dtype</strong> (<em>np.dtype</em>) – The type of data to be stored</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.create_temperature_log">
+<code class="sig-name descname">create_temperature_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.create_temperature_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the ‘temperature_and_current’ dataset on the ‘/logs’ dataset of the h5 file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.get_bts_cv">
+<code class="sig-name descname">get_bts_cv</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pydlcp.datastorage.H5Store.get_bts_cv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the CV sweeps stored in the H5 file wrapped in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary containing the vector for ‘stress_time’, and the matrices ‘voltage’, ‘capacitance’ and
+‘resistance’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_bts_cv_at_time</code><span class="sig-paren">(</span><em class="sig-param">time_idx: int</em><span class="sig-paren">)</span></dt>
+<dd><p>Returns a single CV sweep at a specific time index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time_idx</strong> (<em>int</em>) – The row index corresponding to a specific time of the measurement.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A numpy array of vcr_type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(vcr_type)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.get_bts_temperature">
+<code class="sig-name descname">get_bts_temperature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.get_bts_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the whole temperature log</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The numpy array of type tti_type containing all temperature and leakage current logs.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray(tti_type)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.get_dlcp_data">
+<code class="sig-name descname">get_dlcp_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pydlcp.datastorage.H5Store.get_dlcp_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets al DLCP sweep data as dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary containing the vector for ‘stress_time’, and the matrices ‘osc_level’, ‘bias’, ‘nominal_bias’,
+‘voltage’, ‘capacitance’ and ‘resistance’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.get_metadata">
+<code class="sig-name descname">get_metadata</code><span class="sig-paren">(</span><em class="sig-param">group='/'</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pydlcp.datastorage.H5Store.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the attributes of a selected group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>group</strong> (<em>str</em>) – The group to get the attributes from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with the attributes of the dataset/group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.log_temperature_current">
+<code class="sig-name descname">log_temperature_current</code><span class="sig-paren">(</span><em class="sig-param">time: [&lt;class 'float'&gt;, &lt;class 'int'&gt;], temperature: [&lt;class 'float'&gt;, &lt;class 'int'&gt;], current: float</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.log_temperature_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends the tuple (time, temperature, current) to the ‘temperature_and_current’ dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>[</em><em>float</em><em>, </em><em>int</em><em>]</em>) – The timedelta since the beginning of the log</p></li>
+<li><p><strong>temperature</strong> (<em>[</em><em>float</em><em>, </em><em>int</em><em>]</em>) – The sample temperature in °C</p></li>
+<li><p><strong>current</strong> (<em>float</em>) – The leakage current through the device.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.datastorage.H5Store.metadata">
+<code class="sig-name descname">metadata</code><span class="sig-paren">(</span><em class="sig-param">metadata: dict</em>, <em class="sig-param">group='/'</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.datastorage.H5Store.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a dictionary with the measurement metadata to the specified dataset/group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<em>dict</em>) – A dictionary with the metadata to save</p></li>
+<li><p><strong>group</strong> (<em>str</em>) – The dataset/group to save the attribures to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.errors">
+<span id="pydlcp-errors-module"></span><h2>pydlcp.errors module<a class="headerlink" href="#module-pydlcp.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pydlcp.errors.ArduinoError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">ArduinoError</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">name: str</em>, <em class="sig-param">message: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.ArduinoError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.InstrumentError" title="pydlcp.errors.InstrumentError"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.InstrumentError</span></code></a></p>
+<p>This class represents an Arduino Error</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.ArduinoSketchError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">ArduinoSketchError</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">name: str</em>, <em class="sig-param">sketch_file: str</em>, <em class="sig-param">message: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.ArduinoSketchError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.ArduinoError" title="pydlcp.errors.ArduinoError"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.ArduinoError</span></code></a></p>
+<p>This class represents an error caused by handling an Arduino Sketch</p>
+<dl class="attribute">
+<dt id="pydlcp.errors.ArduinoSketchError._sketchFile">
+<code class="sig-name descname">_sketchFile</code><a class="headerlink" href="#pydlcp.errors.ArduinoSketchError._sketchFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>The sketch file that produced the error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.ArduinoSketchError.sketch_file">
+<em class="property">property </em><code class="sig-name descname">sketch_file</code><a class="headerlink" href="#pydlcp.errors.ArduinoSketchError.sketch_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.ConfigurationError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">ConfigurationError</code><span class="sig-paren">(</span><em class="sig-param">message: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.ConfigurationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.Error" title="pydlcp.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.Error</span></code></a></p>
+<p>Base class for Configuration Errors</p>
+<dl class="attribute">
+<dt id="pydlcp.errors.ConfigurationError._message">
+<code class="sig-name descname">_message</code><a class="headerlink" href="#pydlcp.errors.ConfigurationError._message" title="Permalink to this definition">¶</a></dt>
+<dd><p>The explanation of the error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.ConfigurationError.message">
+<em class="property">property </em><code class="sig-name descname">message</code><a class="headerlink" href="#pydlcp.errors.ConfigurationError.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.Error">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">Error</code><a class="headerlink" href="#pydlcp.errors.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base class for exceptions in this module</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.HotplateError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">HotplateError</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">resource_name: str</em>, <em class="sig-param">message: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.HotplateError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.InstrumentError" title="pydlcp.errors.InstrumentError"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.InstrumentError</span></code></a></p>
+<dl class="method">
+<dt id="pydlcp.errors.HotplateError.heating_status">
+<em class="property">property </em><code class="sig-name descname">heating_status</code><a class="headerlink" href="#pydlcp.errors.HotplateError.heating_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.HotplateError.set_heating_status">
+<code class="sig-name descname">set_heating_status</code><span class="sig-paren">(</span><em class="sig-param">status: bool</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.HotplateError.set_heating_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.HotplateError.set_temperature_setpoint">
+<code class="sig-name descname">set_temperature_setpoint</code><span class="sig-paren">(</span><em class="sig-param">setpoint: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.HotplateError.set_temperature_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.HotplateError.temperature_setpoint">
+<em class="property">property </em><code class="sig-name descname">temperature_setpoint</code><a class="headerlink" href="#pydlcp.errors.HotplateError.temperature_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.InstrumentError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">InstrumentError</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">resource_name: str</em>, <em class="sig-param">message: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.InstrumentError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.Error" title="pydlcp.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.Error</span></code></a></p>
+<p>Exception raised when trying to access a pyvisa instrument that is not connected</p>
+<dl class="attribute">
+<dt id="pydlcp.errors.InstrumentError._resourceAddress">
+<code class="sig-name descname">_resourceAddress</code><a class="headerlink" href="#pydlcp.errors.InstrumentError._resourceAddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>The address of the resource</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.errors.InstrumentError._resourceName">
+<code class="sig-name descname">_resourceName</code><a class="headerlink" href="#pydlcp.errors.InstrumentError._resourceName" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the resource (instrument)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.errors.InstrumentError._message">
+<code class="sig-name descname">_message</code><a class="headerlink" href="#pydlcp.errors.InstrumentError._message" title="Permalink to this definition">¶</a></dt>
+<dd><p>An explanation of the error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.InstrumentError.address">
+<em class="property">property </em><code class="sig-name descname">address</code><a class="headerlink" href="#pydlcp.errors.InstrumentError.address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.InstrumentError.message">
+<em class="property">property </em><code class="sig-name descname">message</code><a class="headerlink" href="#pydlcp.errors.InstrumentError.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.InstrumentError.resource_name">
+<em class="property">property </em><code class="sig-name descname">resource_name</code><a class="headerlink" href="#pydlcp.errors.InstrumentError.resource_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pydlcp.errors.SystemConfigError">
+<em class="property">exception </em><code class="sig-prename descclassname">pydlcp.errors.</code><code class="sig-name descname">SystemConfigError</code><span class="sig-paren">(</span><em class="sig-param">message: str</em>, <em class="sig-param">test_units: int</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.errors.SystemConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.errors.ConfigurationError" title="pydlcp.errors.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.errors.ConfigurationError</span></code></a></p>
+<p>A Class representing a System Configuration Error</p>
+<dl class="attribute">
+<dt id="pydlcp.errors.SystemConfigError._testUnits">
+<code class="sig-name descname">_testUnits</code><a class="headerlink" href="#pydlcp.errors.SystemConfigError._testUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of test units in the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.errors.SystemConfigError.test_units">
+<em class="property">property </em><code class="sig-name descname">test_units</code><a class="headerlink" href="#pydlcp.errors.SystemConfigError.test_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.hotplate">
+<span id="pydlcp-hotplate-module"></span><h2>pydlcp.hotplate module<a class="headerlink" href="#module-pydlcp.hotplate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.hotplate.Hotplate">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.hotplate.</code><code class="sig-name descname">Hotplate</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">name: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents a SCILOGEX hotplate</p>
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._calibration">
+<code class="sig-name descname">_calibration</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._calibration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing the polynomial coefficients ‘a1’, ‘a2’ and ‘b’ for the temperature calibtation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._configRequiredOptions">
+<code class="sig-name descname">_configRequiredOptions</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._configRequiredOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The options that need to be read in the calibration file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._heatOn">
+<code class="sig-name descname">_heatOn</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._heatOn" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if its currently heating, False otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._hotplate">
+<code class="sig-name descname">_hotplate</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._hotplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A handle to the serial communication object with the hotplate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>serial.Serial</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._hotplateConnected">
+<code class="sig-name descname">_hotplateConnected</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._hotplateConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the serial communication object is open, false otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._logger">
+<code class="sig-name descname">_logger</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>A logger to handle the class messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._loggingLevels">
+<code class="sig-name descname">_loggingLevels</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._loggingLevels" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary mapping the levels as strings to integers defined by the logging module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._targetTemperature">
+<code class="sig-name descname">_targetTemperature</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._targetTemperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The temperature setpoint in °C</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.hotplate.Hotplate._MAX_FAILED_CALLS">
+<code class="sig-name descname">_MAX_FAILED_CALLS</code><a class="headerlink" href="#pydlcp.hotplate.Hotplate._MAX_FAILED_CALLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum allowable number of retries to call a method that communicates with the hotplate when the call was
+unsuccessful</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">connect(self):</code></dt>
+<dd><p>Opens the serial communication with the hotplate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">disconnect(self):</code></dt>
+<dd><p>Closes the serial communication with the hotplate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate._checksum">
+<code class="sig-name descname">_checksum</code><span class="sig-paren">(</span><em class="sig-param">query</em><span class="sig-paren">)</span> &#x2192; np.uint8:<a class="headerlink" href="#pydlcp.hotplate.Hotplate._checksum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a checksum to the hotplate query.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_write_query(self, query):</code></dt>
+<dd><p>Writes a query to the hotplate using serial communication.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.get_temperature_setpoint">
+<code class="sig-name descname">get_temperature_setpoint</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">failed_calls: np.uint8 = 0</em><span class="sig-paren">)</span> &#x2192; float:<a class="headerlink" href="#pydlcp.hotplate.Hotplate.get_temperature_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the temperature set point for the hotplate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.correct_temperature_setpoint">
+<code class="sig-name descname">correct_temperature_setpoint</code><span class="sig-paren">(</span><em class="sig-param">temperature: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#pydlcp.hotplate.Hotplate.correct_temperature_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the stored calibration coefficients to correct for the temperature setpoint in order to achieve the right
+temperature setting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<em>float</em>) – The target temperature in °C</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The corrected temperature to be used as the hotplate’s set point.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.disconnect">
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.get_heating_status">
+<code class="sig-name descname">get_heating_status</code><span class="sig-paren">(</span><em class="sig-param">failed_calls: numpy.uint8 = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pydlcp.hotplate.Hotplate.get_heating_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds out if the hotplate is currently heating or not</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>From SCILOGEX
+Section 3.2 Get information</p>
+<p>Command:</p>
+<p>1   | 2    | 3    | 4    | 5    | 6</p>
+<p>0xfe | 0xA1 | NULL | NULL | NULL | Check sum</p>
+<p>Response:</p>
+<p>1   | 2    | 3,4,5,6,7,8,9,10 | 11</p>
+<p>0xfd | 0xA1 | Parameter1… 8  | Check sum</p>
+<p>Parameter3: temperature status (0: closed, 1: open)</p>
+<dl class="simple">
+<dt>failed_calls: np.uint8</dt><dd><p>The number of times the function has been called unsuccessfully (default = 0)</p>
+</dd>
+</dl>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the method was called more than _MAX_FAILED_CALLS unsuccessfully.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">get_temperature_setpoint</code><span class="sig-paren">(</span><em class="sig-param">failed_calls: numpy.uint8 = 0</em><span class="sig-paren">)</span> &#x2192; float</dt>
+<dd><p>Returns the temperature set point of the hotplate.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>From SCILOGEX
+Section 3.3 Get status</p>
+<p>Command:</p>
+<p>1 | 2 | 3 | 4 | 5 | 6</p>
+<p>0xfe | 0xA2 | NULL | NULL | NULL | Check sum</p>
+<p>Response:</p>
+<p>1    | 2    | 3, 4, 5, 6, 7, 8, 9, 10 | 11</p>
+<p>0xfd | 0xA2 | Parameter1… 8         | Check sum</p>
+<p>Parameter5: temp set(high)</p>
+<p>Parameter6: temp set(low)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>failed_calls</strong> (<em>np.uint8</em>) – The number of times the function has been called unsuccessfully (default = 0)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The temperature setpoint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If the method was called more than _MAX_FAILED_CALLS unsuccessfully.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.load_calibration">
+<code class="sig-name descname">load_calibration</code><span class="sig-paren">(</span><em class="sig-param">config: configparser.ConfigParser</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.load_calibration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the calibration coefficients from an .ini file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>onfigparser.ConfigParser</em>) – The configuration parser</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the argument is not an instance of configparser.ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.set_calibration">
+<code class="sig-name descname">set_calibration</code><span class="sig-paren">(</span><em class="sig-param">a1: float</em>, <em class="sig-param">a2: float</em>, <em class="sig-param">b: float</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.set_calibration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the polynomial coefficients for the temperature calibtation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a1</strong> (<em>float</em>) – The coefficient to the second oder term</p></li>
+<li><p><strong>a2</strong> (<em>float</em>) – The coefficient to the first order term</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – The zero order term</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.set_logger">
+<code class="sig-name descname">set_logger</code><span class="sig-paren">(</span><em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.set_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the logger to handle the class messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> (<em>logging.Logger</em>) – The logger</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the argument is not an instance of logging.Logger.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.hotplate.Hotplate.set_temperature">
+<code class="sig-name descname">set_temperature</code><span class="sig-paren">(</span><em class="sig-param">temperature: int</em>, <em class="sig-param">failed_calls: numpy.uint8 = 0</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.hotplate.Hotplate.set_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the temperature set point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<em>int</em>) – The new temperature set point</p></li>
+<li><p><strong>failed_calls</strong> (<em>np.uint8</em>) – The number of times the function has been called unsuccessfully (default = 0)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#pydlcp.errors.HotplateError" title="pydlcp.errors.HotplateError"><strong>errors.HotplateError</strong></a> – If exceeded the maximum number of allowed attempts (_MAX_FAILED_CALLS) to set the temperature.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.impedance_analyzer">
+<span id="pydlcp-impedance-analyzer-module"></span><h2>pydlcp.impedance_analyzer module<a class="headerlink" href="#module-pydlcp.impedance_analyzer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.impedance_analyzer.</code><code class="sig-name descname">ImpedanceAnalyzer</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">resource_manager: pyvisa.highlevel.ResourceManager</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.visa_instrument.VisaInstrument" title="pydlcp.visa_instrument.VisaInstrument"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.visa_instrument.VisaInstrument</span></code></a></p>
+<p>A class used to represent HP4194A Impedance Analyzer and perform basic analysis for the bias-temperature stress
+(BTS) experiment.</p>
+<dl class="attribute">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer._status">
+<code class="sig-name descname">_status</code><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer._status" title="Permalink to this definition">¶</a></dt>
+<dd><p>The status of the instrument: either ‘idle’ or ‘running’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer._waitTime">
+<code class="sig-name descname">_waitTime</code><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer._waitTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the time a measurement function will need to wait to retry execution if the instrument is busy with
+another measurement. Units: seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer.cv_sweep">
+<code class="sig-name descname">cv_sweep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">voltage_start: float</em>, <em class="sig-param">voltage_step: float</em>, <em class="sig-param">voltage_stop: float</em>, <em class="sig-param">frequency: float</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer.cv_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to run a capacitance-voltage (CV) measurement sweep in the impedance analyzer according to the provided
+acquisition parameters. If the instrument is busy running another program, wait the specified amount of seconds
+defined in _waitTime</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer._get_dlcp_template">
+<code class="sig-name descname">_get_dlcp_template</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer._get_dlcp_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a template program for the DLCP measurement with placeholders for the relevant acquisition parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,</code></dt>
+<dd><blockquote>
+<div><p>frequency: float, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</p>
+</div></blockquote>
+<p>Tries to run a drive-level capacitance profiling CV measurement program in the impedance analyzer. If the
+instrument is busy running another measurement, wait the specified amount of seconds defined in _waitTime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer.parse_impedance_data">
+<code class="sig-name descname">parse_impedance_data</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">response: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer.parse_impedance_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the ASCII response from the Impedance Analyzer into the python compound type vcr_type defined in this
+class</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">cv_sweep</code><span class="sig-paren">(</span><em class="sig-param">voltage_start: float</em>, <em class="sig-param">voltage_step: float</em>, <em class="sig-param">voltage_stop: float</em>, <em class="sig-param">frequency: float</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray</dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voltage_start</strong> (<em>float</em>) – The start voltage for the sweep (V)</p></li>
+<li><p><strong>voltage_step</strong> (<em>float</em>) – The step of the voltage sweep (V)</p></li>
+<li><p><strong>voltage_stop</strong> (<em>float</em>) – The stop voltage for the sweep (V)</p></li>
+<li><p><strong>frequency</strong> (<em>float</em>) – The frequency of the AC signal (Hz)</p></li>
+<li><p><strong>kwargs</strong> – keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array containing voltage, capacitance and resistance as columns</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer.dlcp_sweep">
+<code class="sig-name descname">dlcp_sweep</code><span class="sig-paren">(</span><em class="sig-param">nominal_bias: float</em>, <em class="sig-param">start_amplitude: float</em>, <em class="sig-param">step_amplitude: float</em>, <em class="sig-param">stop_amplitude: float</em>, <em class="sig-param">frequency: float</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer.dlcp_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal_bias</strong> (<em>float</em>) – The nominal bias for the DLCP sweep</p></li>
+<li><p><strong>start_amplitude</strong> (<em>float</em>) – The starting amplitude for the oscillator level sweep (V)</p></li>
+<li><p><strong>step_amplitude</strong> (<em>float</em>) – The step size for the amplitude of the oscillator level sweep (V)</p></li>
+<li><p><strong>stop_amplitude</strong> (<em>float</em>) – The stop value for the oscillator level sweep (V)</p></li>
+<li><p><strong>frequency</strong> (<em>float</em>) – The oscillator frequency (Hz)</p></li>
+<li><p><strong>**kwargs</strong> – keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The acquired capacitance data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the integration time setting provided is not ‘ITM1’, ‘ITM2’ or ‘ITM3’</p></li>
+<li><p><strong>ValueError</strong> – If the value provided for the frequency is less or equal to 0.</p></li>
+<li><p><strong>ValueError</strong> – If the number of averager (noa) is not valid. Valid values are:
+    1, 2, 4, 8, 16, 32, 64, 128, 256</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">parse_impedance_data</code><span class="sig-paren">(</span><em class="sig-param">response: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray</dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> (<em>str</em>) – The response from the Impedance Analyzer</p></li>
+<li><p><strong>**kwargs</strong> – keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed response in the form of an array containing voltage, capacitance and resistance as columns</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.impedance_analyzer.ImpedanceAnalyzer.wait_time">
+<em class="property">property </em><code class="sig-name descname">wait_time</code><a class="headerlink" href="#pydlcp.impedance_analyzer.ImpedanceAnalyzer.wait_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.keithley">
+<span id="pydlcp-keithley-module"></span><h2>pydlcp.keithley module<a class="headerlink" href="#module-pydlcp.keithley" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.keithley.Keithley">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.keithley.</code><code class="sig-name descname">Keithley</code><span class="sig-paren">(</span><em class="sig-param">address: str</em>, <em class="sig-param">resource_manager: pyvisa.highlevel.ResourceManager</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydlcp.visa_instrument.VisaInstrument" title="pydlcp.visa_instrument.VisaInstrument"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydlcp.visa_instrument.VisaInstrument</span></code></a></p>
+<p>This class is used to represent a Keithley 2401 source meter in the context of a BTS measurement.</p>
+<dl class="attribute">
+<dt id="pydlcp.keithley.Keithley._debug">
+<code class="sig-name descname">_debug</code><a class="headerlink" href="#pydlcp.keithley.Keithley._debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if we instantiate it in debug mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.keithley.Keithley._sourceOff">
+<code class="sig-name descname">_sourceOff</code><a class="headerlink" href="#pydlcp.keithley.Keithley._sourceOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the source is on, false otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.set_source_voltage">
+<code class="sig-name descname">set_source_voltage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">voltage: float</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.set_source_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the source voltage to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">turn_source_on(self):</code></dt>
+<dd><p>Turns the keithley source on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">turn_source_off(self):</code></dt>
+<dd><p>Turns the keithley source off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">read(self):</code></dt>
+<dd><p>Sends a ‘READ?’ query to the keithley and returns the output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">current(self):</code></dt>
+<dd><p>Reads the current from the keithley source-meter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.current">
+<em class="property">property </em><code class="sig-name descname">current</code><a class="headerlink" href="#pydlcp.keithley.Keithley.current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.disconnect">
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">set_source_voltage</code><span class="sig-paren">(</span><em class="sig-param">voltage: float</em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>voltage</strong> (<em>float</em>) – The set point for the source voltage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.source_on">
+<em class="property">property </em><code class="sig-name descname">source_on</code><a class="headerlink" href="#pydlcp.keithley.Keithley.source_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.turn_source_off">
+<code class="sig-name descname">turn_source_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.turn_source_off" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.keithley.Keithley.turn_source_on">
+<code class="sig-name descname">turn_source_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.keithley.Keithley.turn_source_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.plotting">
+<span id="pydlcp-plotting-module"></span><h2>pydlcp.plotting module<a class="headerlink" href="#module-pydlcp.plotting" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.plotting.DataPlotter">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.plotting.</code><code class="sig-name descname">DataPlotter</code><span class="sig-paren">(</span><em class="sig-param">bts_experiment: pydlcp.bts.BTS</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.plotting.DataPlotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pydlcp.plotting.DataPlotter.plot_cv">
+<code class="sig-name descname">plot_cv</code><span class="sig-paren">(</span><em class="sig-param">fig: matplotlib.figure.Figure, axes: List[matplotlib.axes._axes.Axes], clean: bool = True</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.plotting.DataPlotter.plot_cv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp.visa_instrument">
+<span id="pydlcp-visa-instrument-module"></span><h2>pydlcp.visa_instrument module<a class="headerlink" href="#module-pydlcp.visa_instrument" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pydlcp.visa_instrument.VisaInstrument">
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.visa_instrument.</code><code class="sig-name descname">VisaInstrument</code><span class="sig-paren">(</span><em class="sig-param">resource_address: str</em>, <em class="sig-param">resource_name: str</em>, <em class="sig-param">resource_manager: pyvisa.highlevel.ResourceManager</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to represent pyvisa objects</p>
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._instrument">
+<code class="sig-name descname">_instrument</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pyvisa resource</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyvisa.resources.Resource</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._isConnected">
+<code class="sig-name descname">_isConnected</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._isConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the instrument has been connected, false otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._logger">
+<code class="sig-name descname">_logger</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>A logger specified by python’s logger module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._resourceAddress">
+<code class="sig-name descname">_resourceAddress</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._resourceAddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>The address of the instrument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._resourceManager">
+<code class="sig-name descname">_resourceManager</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._resourceManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>A handle to the resource manager provided by pyvisa</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyvisa.highlevel.ResourceManager</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pydlcp.visa_instrument.VisaInstrument._resourceName">
+<code class="sig-name descname">_resourceName</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._resourceName" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the resource</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the visa connection to the instrument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.disconnect">
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the visa connection to the instrument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">query:str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a string to the instrument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.query_ascii">
+<code class="sig-name descname">query_ascii</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">query:str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.query_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a query to the instrument and reads the response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.set_logger">
+<code class="sig-name descname">set_logger</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.set_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the logger that handles the message output for the _print function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument._print">
+<code class="sig-name descname">_print</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">msg:str</em>, <em class="sig-param">level:str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a message with either python’s ‘print’ function or the logger provided in ‘set_logger’</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">query_ascii</code><span class="sig-paren">(</span><em class="sig-param">q: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>str</em>) – The query to send to the insturment</p></li>
+<li><p><strong>**kwargs</strong> – keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The response from the instrument</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">set_logger</code><span class="sig-paren">(</span><em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> (<em>logging.Logger</em>) – The logger to handle the system messages</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Warning</strong> – If the logger is not an instance of logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">string: str</em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to write to the instrument</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pydlcp">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pydlcp" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Erick R Martinez Loran
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

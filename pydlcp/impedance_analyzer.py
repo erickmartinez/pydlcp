@@ -1,8 +1,3 @@
-"""
-This class defines the communication with the impedance analyzer
-
-@author: Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
 import numpy as np
 from pydlcp import visa_instrument as vi
 import pyvisa
@@ -199,6 +194,18 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         -------
         np.ndarray
             The acquired capacitance data
+
+        Raises
+        ------
+        ValueError
+            If the integration time setting provided is not 'ITM1', 'ITM2' or 'ITM3'
+
+        ValueError
+            If the value provided for the frequency is less or equal to 0.
+
+        ValueError
+            If the number of averager (noa) is not valid. Valid values are:
+            1, 2, 4, 8, 16, 32, 64, 128, 256
         """
         integration_time = kwargs.get('integration_time', 'ITM1')
         number_of_averages = kwargs.get('noa', 1)

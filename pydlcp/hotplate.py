@@ -1,18 +1,55 @@
-"""
-This class provides remote functionality for a SCILOGEX hotplate.
-
-@author Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
-
 import serial
 import numpy as np
 from pydlcp import errors
 import time
 import logging
 import configparser
+from typing import List
 
 
 class Hotplate:
+    """
+    This class represents a SCILOGEX hotplate
+
+    Attributes
+    ----------
+    _calibration: dict
+        A dictionary containing the polynomial coefficients 'a1', 'a2' and 'b' for the temperature calibtation
+    _configRequiredOptions: List[str]
+        The options that need to be read in the calibration file
+    _heatOn: bool
+        True if its currently heating, False otherwise
+    _hotplate: serial.Serial
+        A handle to the serial communication object with the hotplate
+    _hotplateConnected: bool
+        True if the serial communication object is open, false otherwise.
+    _logger: logging.Logger
+        A logger to handle the class messages.
+    _loggingLevels: dict
+        A dictionary mapping the levels as strings to integers defined by the logging module
+    _targetTemperature: int
+        The temperature setpoint in °C
+    _MAX_FAILED_CALLS: int
+        The maximum allowable number of retries to call a method that communicates with the hotplate when the call was
+        unsuccessful
+
+    Methods
+    -------
+    connect(self):
+        Opens the serial communication with the hotplate.
+
+    disconnect(self):
+        Closes the serial communication with the hotplate.
+
+    _checksum(query) -> np.uint8:
+        Returns a checksum to the hotplate query.
+
+    _write_query(self, query):
+        Writes a query to the hotplate using serial communication.
+
+    get_temperature_setpoint(self, failed_calls: np.uint8 = 0) -> float:
+        Returns the temperature set point for the hotplate.
+    """
     _calibration = {'a1': 0.00112759470035273,
                     'a2': 0.820085915455346,
                     'b': 11.0122612663442}
@@ -32,13 +69,14 @@ class Hotplate:
 
     def __init__(self, address: str, name: str, **kwargs):
         """
-        Arguments
+        Parameters
         ---------
-        :param address: The port to which the hotplate is connected
-        :type address: str
-        :param name: The name assigned to the hotplate
-        :type name: str
-        :param kwargs: keyword arguments
+        address: str
+            The port to which the hotplate is connected
+        name: str
+            The name assigned to the hotplate
+        **kwargs:
+            keyword arguments
         """
         baudrate = kwargs.get('baudrage', 9600)
         bytesize = kwargs.get('bitsize', 8)
@@ -82,28 +120,42 @@ class Hotplate:
 
     def get_temperature_setpoint(self, failed_calls: np.uint8 = 0) -> float:
         """
-        :param failed_calls: The number of times the function has been called unsuccessfully (default = 0)
-        :type failed_calls: np.uint8
-        :return set_temperature: The temperature set point
-        :rtype set_temperature: float
-        
-        From SCILOGEX
-        Section 3.3 Get status
-        
-        Command:
-        -------------------------------------------------------
-        1 | 2 | 3 | 4 | 5 | 6
-        -------------------------------------------------------
-        0xfe | 0xA2 | NULL | NULL | NULL | Check sum
-        -------------------------------------------------------
-        Response:
-        -------------------------------------------------------
-        1    | 2    | 3, 4, 5, 6, 7, 8, 9, 10 | 11
-        -------------------------------------------------------
-        0xfd | 0xA2 | Parameter1... 8         | Check sum
-         -------------------------------------------------------
-        Parameter5: temp set(high)
-        Parameter6: temp set(low)
+        Returns the temperature set point of the hotplate.
+
+        .. note::
+            From SCILOGEX
+            Section 3.3 Get status
+
+            Command:\r\n
+            -------------------------------------------------------\r\n
+            1 | 2 | 3 | 4 | 5 | 6\r\n
+            -------------------------------------------------------\r\n
+            0xfe | 0xA2 | NULL | NULL | NULL | Check sum\r\n
+            -------------------------------------------------------\r\n
+            Response:\r\n
+            -------------------------------------------------------\r\n
+            1    | 2    | 3, 4, 5, 6, 7, 8, 9, 10 | 11\r\n
+            -------------------------------------------------------\r\n
+            0xfd | 0xA2 | Parameter1... 8         | Check sum\r\n
+            -------------------------------------------------------\r\n
+            Parameter5: temp set(high)\r\n
+            Parameter6: temp set(low)\r\n
+
+        Parameters
+        ----------
+        failed_calls: np.uint8
+            The number of times the function has been called unsuccessfully (default = 0)
+
+        Returns
+        -------
+        float
+            The temperature setpoint
+
+        Warnings
+        --------
+        Warning
+            If the method was called more than _MAX_FAILED_CALLS unsuccessfully.
+
         """
 
         # Prepare the query to the hotplate
@@ -152,27 +204,35 @@ class Hotplate:
 
     def get_heating_status(self, failed_calls: np.uint8 = 0) -> bool:
         """
-        :param failed_calls: The number of times the function has been called unsuccessfully (default = 0)
-        :type failed_calls: np.uint8
-        :return status: True if not heating False if heating
-        :rtype status: bool
+        Finds out if the hotplate is currently heating or not
 
-        % From SCILOGEX
-        % Section 3.2 Get information
-        %
-        % Command:
-        % -------------------------------------------------------
-        %  1   | 2    | 3    | 4    | 5    | 6
-        % -------------------------------------------------------
-        % 0xfe | 0xA1 | NULL | NULL | NULL | Check sum
-        % -------------------------------------------------------
-        % Response:
-        % -------------------------------------------------------
-        %  1   | 2    | 3,4,5,6,7,8,9,10 | 11
-        % -------------------------------------------------------
-        % 0xfd | 0xA1 | Parameter1... 8  | Check sum
-        % -------------------------------------------------------
-        % Parameter3: temperature status (0: closed, 1: open)
+        .. note::
+            From SCILOGEX
+            Section 3.2 Get information
+
+            Command:\r\n
+            -------------------------------------------------------\r\n
+            1   | 2    | 3    | 4    | 5    | 6\r\n
+            -------------------------------------------------------\r\n
+            0xfe | 0xA1 | NULL | NULL | NULL | Check sum\r\n
+            -------------------------------------------------------\r\n
+            Response: \r\n
+            -------------------------------------------------------\r\n
+            1   | 2    | 3,4,5,6,7,8,9,10 | 11\r\n
+            -------------------------------------------------------\r\n
+            0xfd | 0xA1 | Parameter1... 8  | Check sum\r\n
+            -------------------------------------------------------\r\n
+            Parameter3: temperature status (0: closed, 1: open)
+
+            Parameters
+            ----------
+            failed_calls: np.uint8
+                The number of times the function has been called unsuccessfully (default = 0)
+
+        Warnings
+        --------
+        Warning
+            If the method was called more than _MAX_FAILED_CALLS unsuccessfully.
         """
         # Prepare the query to the hotplate
         query = [254, 161, 0, 0]
@@ -211,6 +271,42 @@ class Hotplate:
         return status
 
     def set_temperature(self, temperature: int, failed_calls: np.uint8 = 0):
+        """
+        Changes the temperature set point
+
+        .. note:
+             From SCILOGEX \r\n
+             3.5 Temperature control \r\n
+             Command: \r\n
+             -------------------------------------------------------\r\n
+              1   | 2    | 3          | 4         | 5    | 6 \r\n
+             -------------------------------------------------------\r\n
+             0xfe | 0xB2 | Temp(high) | temp(low) | NULL | Check sum \r\n
+             -------------------------------------------------------\r\n
+             Response: \r\n
+             -------------------------------------------------------\r\n
+              1   | 2    | 3          | 4    | 5    | 6 \r\n
+             -------------------------------------------------------\r\n
+             0xfd | 0xB2 | Parameter1 | NULL | NULL | Check sum \r\n
+             -------------------------------------------------------\r\n
+             If temperature set=300, temphigh)=0x01 temp (low)=0x2C  \r\n
+             ********** NOTE: sets T=30 °C not 300 °C \r\n
+             Parameter1: \r\n
+             0:OK \r\n
+             1:fault \r\n
+
+        Parameters
+        ----------
+        temperature: int
+            The new temperature set point
+        failed_calls: np.uint8
+            The number of times the function has been called unsuccessfully (default = 0)
+
+        Raises
+        ------
+        errors.HotplateError
+            If exceeded the maximum number of allowed attempts (_MAX_FAILED_CALLS) to set the temperature.
+        """
         current_setpoint = self.get_temperature_setpoint()
         corrected_temperature = self.correct_temperature_setpoint(temperature)
         if current_setpoint != temperature or self.get_heating_status():
@@ -263,15 +359,16 @@ class Hotplate:
 
     def set_calibration(self, a1: float, a2: float, b: float):
         """
-        Arguments
+        Sets the polynomial coefficients for the temperature calibtation
+
+        Parameters
         ----------
-        :param a1: The coefficient to the second oder term
-        :type a1: float
-        :param a2: The coefficient to the first order term
-        :type a2: float
-        :param b: The zero order term
-        :type b: float
-        :return: None
+        a1: float
+            The coefficient to the second oder term
+        a2: float
+            The coefficient to the first order term
+        b: float
+            The zero order term
         """
         self._calibration = {'a1': a1,
                              'a2': a2,
@@ -279,11 +376,17 @@ class Hotplate:
 
     def load_calibration(self, config: configparser.ConfigParser):
         """
-        Attributes
+        Loads the calibration coefficients from an .ini file
+
+        Parameters
         ----------
-        :param config: The configuration parser
-        :type config: configparser.ConfigParser
-        :return: None
+        config: onfigparser.ConfigParser
+            The configuration parser
+
+        Raises
+        ------
+        ValueError
+            If the argument is not an instance of configparser.ConfigParser
         """
         if self._validate_config(config, self._configRequiredOptions):
             self._calibration = {'a1': config.getfloat(self._name, 'a1'),
@@ -291,6 +394,21 @@ class Hotplate:
                                  'b': config.getfloat(self._name, 'b')}
 
     def _validate_config(self, config: configparser.ConfigParser, required_options) -> bool:
+        """
+        Validates that the provided configuration file contains all the polynomial coefficients.
+
+        Parameters
+        ----------
+        config: configparser.ConfigParser
+            The configuration parser with the calibration coefficients
+        required_options: dict
+            The required fields in the calibration file.
+
+        Returns
+        -------
+        bool
+            True if the configuration is valid, false otherwise.
+        """
         if not isinstance(config, configparser.ConfigParser):
             raise TypeError('The configuration argument must be an instance of configparser.ConfigParser.')
         if config.has_section(self._name):
@@ -301,6 +419,19 @@ class Hotplate:
         return True
 
     def correct_temperature_setpoint(self, temperature: float) -> float:
+        """
+        Uses the stored calibration coefficients to correct for the temperature setpoint in order to achieve the right
+        temperature setting.
+
+        Parameters
+        ----------
+        temperature: float
+            The target temperature in °C
+        Returns
+        -------
+        float
+            The corrected temperature to be used as the hotplate's set point.
+        """
         x = temperature
         a1: float = self._calibration['a1']
         a2: float = self._calibration['a2']
@@ -308,9 +439,34 @@ class Hotplate:
         return a1*x*x + a2*x + b
 
     def set_logger(self, logger: logging.Logger):
+        """
+        Sets the logger to handle the class messages.
+
+        Parameters
+        ----------
+        logger: logging.Logger
+            The logger
+
+        Raises
+        ------
+        ValueError
+            If the argument is not an instance of logging.Logger.
+        """
+        if not isinstance(logger, logging.Logger):
+            raise ValueError('The argument should be an instance of logging.Logger.')
         self._logger = logger
 
     def _print(self, msg: str, level="INFO"):
+        """
+        Prints a class message. If a logger is available, it handles the message through the logger instead.
+
+        Parameters
+        ----------
+        msg: str
+            The message
+        level: str
+            The level of the message (only used of a logger is available)
+        """
         level_no = self._loggingLevels[level]
         if self._logger is None:
             print(msg)

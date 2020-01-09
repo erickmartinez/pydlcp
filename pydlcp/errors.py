@@ -1,8 +1,3 @@
-"""
-This code provides custom exceptions for the pydlcp system
-
-@author: Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
 
 
 class Error(Exception):
@@ -27,14 +22,14 @@ class InstrumentError(Error):
     """
     def __init__(self, address: str, resource_name: str, message: str):
         """
-        Arguments
+        Parameters
         ---------
-        :param address: The address of the resource
-        :type address: str
-        :param resource_name: The name of the resource
-        :type resource_name: str
-        :param message: The explanation of the error
-        :type message: str
+        address: str
+            The address of the resource
+        resource_name: str
+            The name of the resource
+        message: str
+            The explanation of the error
         """
         self._resourceAddress = address
         self._resourceName = resource_name
@@ -42,26 +37,14 @@ class InstrumentError(Error):
 
     @property
     def address(self) -> str:
-        """
-        :return: The address of the resource
-        :rtype: str
-        """
         return self._resourceAddress
 
     @property
     def resource_name(self) -> str:
-        """
-        :return: The name of the visa resource
-        :rtype: str
-        """
         return self._resourceName
 
     @property
     def message(self) -> str:
-        """
-        :return: The explanation of the error
-        :rtype: str
-        """
         return self._message
 
 
@@ -98,10 +81,10 @@ class ConfigurationError(Error):
     """
     def __init__(self, message: str):
         """
-        Arguments
+        Parameters
         ---------
-        :param message: The explanation of the error.
-        :type message: str
+        message: str
+            The explanation of the error.
         """
         self._message = message
 
@@ -111,7 +94,23 @@ class ConfigurationError(Error):
 
 
 class SystemConfigError(ConfigurationError):
+    """
+    A Class representing a System Configuration Error
+
+    Attributes
+    ----------
+    _testUnits: int
+        The number of test units in the system
+    """
     def __init__(self, message: str, test_units: int):
+        """
+        Parameters
+        ----------
+        message: str
+            The explanation of the error
+        test_units: int
+            The number of test units in the system
+        """
         super().__init__(message=message)
         self._testUnits = test_units
 
@@ -121,11 +120,24 @@ class SystemConfigError(ConfigurationError):
 
 
 class ArduinoError(InstrumentError):
+    """
+    This class represents an Arduino Error
+    """
     def __init__(self, address: str, name: str, message: str):
         super().__init__(address=address, resource_name=name, message=message)
 
 
 class ArduinoSketchError(ArduinoError):
+    """
+    This class represents an error caused by handling an Arduino Sketch
+
+    Attributes
+    ----------
+    _sketchFile: str
+        The sketch file that produced the error
+    """
+    _sketchFile: str = None
+
     def __init__(self, address: str, name: str, sketch_file: str, message: str):
         super().__init__(address=address, name=name, message=message)
         self._sketchFile = sketch_file
@@ -133,5 +145,3 @@ class ArduinoSketchError(ArduinoError):
     @property
     def sketch_file(self) -> str:
         return self._sketchFile
-
-

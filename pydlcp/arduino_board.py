@@ -1,8 +1,3 @@
-"""
-This class provides basic operations for an Arduino board
-
-@author Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
 import logging
 from string import Template
 import subprocess
@@ -12,23 +7,28 @@ import os
 import platform
 import time
 import pydlcp.errors as errors
+from typing import List
 
 
 class ArduinoBoard:
     """
+    This class provides basic control to an Arduino board running a serial controller
+
+    ...
+
     Attributes
     ----------
-    _activePins:
+    _activePins: List[int]
         The pins that are currently active
-    _board:
+    _board: serial.Serial
         The serial connection to the arduino board.
     _boardConnected: bool
         True if the serial connection to the board is open, false otherwise
-    _pinMappings:
+    _pinMappings: dict
         A dictionary containing the map of pins for different functionalities
-    _fanOn:
+    _fanOn: bool
         True if the fan is on false otherwise
-    _keithleyConnected:
+    _keithleyConnected: bool
         True if all the measuring pins are connected to the keithley source meter, false if they are connected to the
         impedance analyzer
 
@@ -106,8 +106,6 @@ class ArduinoBoard:
 
     def __init__(self, address: str, name: str, pin_mappings: dict):
         """
-        The contructor for the class
-
         Parameters
         ----------
         address: str
@@ -136,6 +134,9 @@ class ArduinoBoard:
         self._board.port = address
 
     def connect(self):
+        """
+        Opens the serial communication with the Arduino controller
+        """
         if not self._boardConnected:
             self._board.open()
             self._boardConnected = True
@@ -144,6 +145,9 @@ class ArduinoBoard:
             self._print(msg=msg, level='WARNING')
 
     def disconnect(self):
+        """
+        Closes the serial connection with the Arduino controller
+        """
         if self._boardConnected:
             self._activePins = []
             self._board.close()
@@ -153,6 +157,14 @@ class ArduinoBoard:
             self._print(msg=msg, level='WARNING')
 
     def connect_keithley(self):
+        """
+        Triggers the relay to connect the sample pins to the Keithley source-meter
+
+        Warnings
+        --------
+        Warning
+            If the Keithley source-meter was already connected.
+        """
         if not self._keithleyConnected:
             pin = self._pinMappings['keithley']
             q = r'TOGGLE {0} ON'.format(pin)
@@ -165,6 +177,14 @@ class ArduinoBoard:
             raise Warning(msg)
 
     def disconnect_keithley(self):
+        """
+        Triggers the relay to disconnect the sample pins to the Keithley source-meter.
+
+        Warnings
+        --------
+        Warning
+            If the Keithley source meter was already disconnected.
+        """
         if self._keithleyConnected:
             pin = self._pinMappings['keithley']
             q = r'TOGGLE {0} OFF'.format(pin)
@@ -191,6 +211,11 @@ class ArduinoBoard:
         ------
         errors.ArduinoError
             If the number of the pin is not within the pins defined in _pinMappings
+
+        Warnings
+        --------
+        Warning
+            If the pin was already connected.
         """
         if pin_number in self._pinMappings[pin_number]:
             pin = self._pinMappings[pin_number]
@@ -218,6 +243,11 @@ class ArduinoBoard:
         ------
         errors.ArduinoError
             If the number of the pin is not within the pins defined in _pinMappings
+
+        Warnings
+        --------
+        Warning
+            If the pin was already disconnected.
         """
         if pin_number in self._pinMappings[pin_number]:
             pin = self._pinMappings[pin_number]
@@ -234,6 +264,14 @@ class ArduinoBoard:
             raise Warning(msg)
 
     def fan_on(self):
+        """
+        Triggers the relay to turn the fan on for the current board.
+
+        Warnings
+        ------
+        Warning
+            If the fan was already on.
+        """
         if not self._fanOn:
             pin = self._pinMappings['fan']
             q = r'TOGGLE {0} ON'.format(pin)
@@ -246,6 +284,14 @@ class ArduinoBoard:
             raise Warning(msg)
 
     def fan_off(self):
+        """
+        Triggers the relay to turn the fan off.
+
+        Warnings
+        --------
+        Warning
+            If the fan was already off.
+        """
         if self._fanOn:
             pin = self._pinMappings['fan']
             q = r'TOGGLE {0} OFF'.format(pin)
@@ -258,10 +304,16 @@ class ArduinoBoard:
             raise Warning(msg)
 
     def disconnect_all_pins(self):
+        """
+        Disconnects all measuring pins from the instruments.
+        """
         for p in range(1, 9):
             self.pin_off(p)
 
     def connect_all_pins(self):
+        """
+        Connects all measuring pins (by default, to the Impedance Analyzer).
+        """
         for p in range(1, 9):
             self.pin_on(p)
 
@@ -283,17 +335,38 @@ class ArduinoBoard:
     def set_logger(self, logger: logging.Logger):
         """
         Defines a logger for the class
-        :param logger: A logger
-        :type logger: logging.Logger
-        :return: None
+
+        Parameters
+        ----------
+        logger: logger: logging.Logger
+            A logger
+
+        Raises
+        ------
+        TypeError
+            If the provided logger is not an instance of logging.Logger.
         """
         if isinstance(logger, logging.Logger):
             self._logger = logger
         else:
             msg = 'Logger must be an instance of logging.Logger'
-            raise ValueError(msg)
+            raise TypeError(msg)
 
     def create_serial_server(self):
+        """
+        Creates an Arduino sketch that defines the logic of the Arduino board and creates a Serial controller to
+        access the logic on the Arduino through a PC.
+
+        The configuration of the pins on the sketch is injected from the
+        pinMappings by substituting the right placeholders on a template file. It then generates a sketch folder with
+        the .ino files. The method uses arduino.exe to verify and upload the sketch to the Arduino board in the selected
+        port.
+
+        Raises
+        ------
+        subprocess.CalledProcessError
+            If there is a problem compiling or uplading the sketch to the board.
+        """
         # Load the template file
         filein = open(self._serverTemplate, 'r')
         src = Template(filein.read())
@@ -347,17 +420,17 @@ class ArduinoBoard:
 
         Parameters
         ----------
-        :command: str
+        command: str
             The command to be sent
 
         Returns
         -------
-        str:
+        str
             The response from the arduino controller
 
         Warnings
         --------
-        Warning:
+        Warning
             If the board is not connected
         """
         if not self._boardConnected:

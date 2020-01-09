@@ -1,8 +1,3 @@
-"""
-This class provides control functions for the DLCP system
-
-@author Erick R Martinez Loran <erickrmartinez@gmail.com>
-"""
 import numpy as np
 import configparser
 import json

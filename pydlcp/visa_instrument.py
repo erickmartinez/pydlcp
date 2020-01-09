@@ -1,8 +1,3 @@
-"""
-This class defines the minimum functionality for a visa instrument
-
-@author: Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
 import pyvisa
 import numpy as np
 from pydlcp import errors

@@ -1,8 +1,3 @@
-"""
-This class provides plotting methods to display CV and DLCP graphs
-
-@author: Erick R Martinez Loran <erickrmartinez@gmail.com>
-"""
 
 import numpy as np
 import matplotlib.pyplot as plt

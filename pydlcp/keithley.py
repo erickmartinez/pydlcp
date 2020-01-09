@@ -1,8 +1,3 @@
-"""
-This class defines the communication with the Keithley 2400
-
-@author: Erick Martinez Loran <erickrmartinez@gmail.com>
-"""
 
 from pydlcp import visa_instrument as vi
 import pyvisa

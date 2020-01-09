@@ -1,8 +1,3 @@
-"""
-This class provides functionality to measure bias-temperature stress experments
-
-@author Erick R Martinez Loran <erickrmartinez@gmail.com>
-"""
 from datetime import datetime
 from datetime import timedelta
 from pydlcp import datastorage
@@ -63,15 +58,8 @@ class BTS:
     temperature_sampling_interval(self) -> int:
         The temperature sampling interval in seconds
 
-    status(self) -> str:
-        The status of the measurement
-
     accumulate_interval(self, dt: float):
         Increases the interval counter and adds the estimated stress time to the accumulatedStresTime property.
-
-    @status.setter
-    status(self, status: str):
-        Sets the current status of the BTS measurement
 
     max_time(self):
         The target total stress time in seconds
@@ -96,8 +84,6 @@ class BTS:
     def __init__(self, temperature: float, bias: float, stress_interval: int, temperature_sampling_interval: int,
                  max_time: float):
         """
-        The constructor for the class
-
         Parameters
         ----------
         temperature: float
@@ -189,24 +175,24 @@ class BTS:
 
     def time_delta_bts(self, current_datetime: datetime) -> float:
         """
-                Returns the timedelta between the provided datetime and the datetime at the beginning of the last
-                bias stress.
+        Returns the timedelta between the provided datetime and the datetime at the beginning of the last
+        bias stress.
 
-                Parameters
-                ----------
-                current_datetime: datetime
-                    The date and time
+        Parameters
+        ----------
+        current_datetime: datetime
+            The date and time
 
-                Returns
-                -------
-                float
-                    The difference in time (in seconds).
+        Returns
+        -------
+        float
+            The difference in time (in seconds).
 
-                Raises
-                ------
-                TypeError
-                    If the provided current_datetime is not an instance of datetime.
-                """
+        Raises
+        ------
+        TypeError
+            If the provided current_datetime is not an instance of datetime.
+        """
         if not isinstance(current_datetime, datetime):
             raise TypeError('The argument should be an instance of \'datetime\'.')
         dt: timedelta = current_datetime - self._start_bts_interval
@@ -235,6 +221,27 @@ class BTS:
         return self._status
 
     def accumulate_interval(self, dt: float):
+        """
+        After bias-temperature stress interval has completed accumulates the total stress time and increases the
+        interval counter
+
+        Parameters
+        ----------
+        dt: float
+            The amount of time kept under stress during the present interval (seconds).
+
+        Raises
+        ------
+        TypeError
+            If dt is not float or int
+        ValueError
+            If dt < 0
+        """
+        if not isinstance(dt, float) and not isinstance(dt, int):
+            raise TypeError('The time interval should be either int or float. Provided: {0}.'.format(dt))
+
+        if dt < 0:
+            raise ValueError('The time interval should be a positive real. Provided: {0}.'.format(dt))
         self._intervalProgress += 1
         self._accumulatedStressTime += dt
 
