@@ -20,11 +20,11 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
     Attributes
     ----------
-    _status:
+    _status: str
         The status of the instrument: either 'idle' or 'running'
     _waitTime: int
-        Defines the time a measurement function will need to wait to retry execution if the instrument is busy with
-        another measurement. Units: seconds
+        Defines the time in seconds a measurement function will need to wait to retry execution if the instrument is
+        busy with another measurement.
 
     Methods
     -------
@@ -63,8 +63,6 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
     def __init__(self, address: str, resource_manager: pyvisa.ResourceManager, debug: bool = False):
         """
-        Constructor for the class
-
         Parameters
         ----------
         address: str
@@ -90,13 +88,24 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             The stop voltage for the sweep (V)
         frequency: float
             The frequency of the AC signal (Hz)
-        kwargs:
+        **kwargs:
             keyword arguments
 
         Returns
         -------
         np.ndarray:
             An array containing voltage, capacitance and resistance as columns
+
+        Raises
+        ------
+        ValueError
+            If the sweep direction is not valid (valid values are: SWD1 and SWD2).
+        ValueError
+            If the integration time is not valid (valid values are 'ITM1', 'ITM2' and 'ITM3')
+        ValueError
+            If the frequency < 0
+        ValueError
+            If the number of averages (noa) is invalid (valid values are 1, 2, 4, 8, 16, 32, 64, 128 and 256)
         """
         sweep_direction = kwargs.get('sweep_direction', 'SWD1')
         number_of_averages = kwargs.get('noa', 1)
@@ -175,6 +184,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
     def dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,
                    frequency: float, **kwargs) -> np.ndarray:
         """
+        Performs a DLCP sweep
+
         Parameters
         ----------
         nominal_bias: float
@@ -257,7 +268,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
     def parse_impedance_data(self, response: str, **kwargs) -> np.ndarray:
         """
-
+        Parses the ASCII response from the Impedance Analyzer into an array of numbers
         Parameters
         ----------
         response: str

@@ -25,8 +25,6 @@ class Hotplate:
         True if the serial communication object is open, false otherwise.
     _logger: logging.Logger
         A logger to handle the class messages.
-    _loggingLevels: dict
-        A dictionary mapping the levels as strings to integers defined by the logging module
     _targetTemperature: int
         The temperature setpoint in °C
     _MAX_FAILED_CALLS: int
@@ -123,9 +121,9 @@ class Hotplate:
         Returns the temperature set point of the hotplate.
 
         .. note::
-            From SCILOGEX
-            Section 3.3 Get status
-
+            From SCILOGEX\r\n
+            Section 3.3 Get status\r\n
+            \r\n
             Command:\r\n
             -------------------------------------------------------\r\n
             1 | 2 | 3 | 4 | 5 | 6\r\n
@@ -138,8 +136,8 @@ class Hotplate:
             -------------------------------------------------------\r\n
             0xfd | 0xA2 | Parameter1... 8         | Check sum\r\n
             -------------------------------------------------------\r\n
-            Parameter5: temp set(high)\r\n
-            Parameter6: temp set(low)\r\n
+            Parameter5 - temp set(high)\r\n
+            Parameter6 - temp set(low)\r\n
 
         Parameters
         ----------
@@ -207,9 +205,9 @@ class Hotplate:
         Finds out if the hotplate is currently heating or not
 
         .. note::
-            From SCILOGEX
-            Section 3.2 Get information
-
+            From SCILOGEX\r\n
+            Section 3.2 Get information\r\n
+            \r\n
             Command:\r\n
             -------------------------------------------------------\r\n
             1   | 2    | 3    | 4    | 5    | 6\r\n
@@ -401,7 +399,7 @@ class Hotplate:
         ----------
         config: configparser.ConfigParser
             The configuration parser with the calibration coefficients
-        required_options: dict
+        required_options:
             The required fields in the calibration file.
 
         Returns
