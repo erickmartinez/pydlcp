@@ -2,6 +2,8 @@ import numpy as np
 from pydlcp import visa_instrument as vi
 import pyvisa
 from io import StringIO
+import time
+
 
 # The return type for a voltage sweep
 vcr_type = np.dtype([('V', 'd'), ('C', 'd'), ('R', 'd')])
@@ -112,6 +114,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         number_of_averages = kwargs.get('noa', 1)
         osc_amplitude = kwargs.get('osc_amplitude', 0.01)
         integration_time = kwargs.get('integration_time', 'ITM1')
+        sweep_voltages = np.arange(voltage_start, voltage_stop+voltage_step, voltage_step)
+        n_voltages = len(sweep_voltages)
 
         if sweep_direction not in self._sweepDirection:
             raise ValueError("Valid values for sweep direction are 'SWD1' and 'SWD2'")
@@ -150,12 +154,20 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         self._status = "running"
         # Write the program on the impedance analyzer
         self.write(program)
-        response = self.query('RUN')
-        self.write('FNC2')
+        time.sleep(1)
+        response = self.query("RUN")
         # values = values[:-1] # Remove character tail
-        data = self.parse_impedance_data(response)
+        data = self.parse_impedance_data(response, n_voltages)
+        # time.sleep(4)
+        # self.write('FNC2')
         self._status = "idle"
         return data
+
+    def connect(self):
+        super().connect()
+        self._instrument.timeout = 120000
+        # self._instrument.read_termination = '\n'
+        # self._instrument.write_termination = '\n'
 
     @staticmethod
     def _get_dlcp_template() -> str:
@@ -267,13 +279,15 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             msg = 'The wait time must be a positive integer. Ignoring provided value of \'{0}\'.'.format(seconds)
             self._print(msg=msg, level='WARNING')
 
-    def parse_impedance_data(self, response: str, **kwargs) -> np.ndarray:
+    def parse_impedance_data(self, response: str, max_rows: int, **kwargs) -> np.ndarray:
         """
         Parses the ASCII response from the Impedance Analyzer into an array of numbers
         Parameters
         ----------
         response: str
             The response from the Impedance Analyzer
+        max_rows: int
+            The number of values to read
         **kwargs:
             keyword arguments
 
@@ -283,16 +297,21 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             The parsed response in the form of an array containing voltage, capacitance and resistance as columns
         """
         skip_rows = kwargs.get('skip_rows', 2)
+        # self._print(response)
+        # print('max_rows = {0:d}'.format(max_rows))
         values = np.loadtxt(StringIO(response),
                             skiprows=skip_rows,
-                            dtype={'names': ('n', 'V', 'C', 'unit_factor_c', 'R', 'unit_factor_r'),
-                                   'formats': ('i4', 'd', 'd', 'S1', 'd', 'S1')})
+                            usecols=(1, 2, 3, 4),
+                            dtype={'names': ('V', 'C', 'unit_factor_c', 'R'),
+                                   'formats': ('d', 'd', 'U1', 'd')},
+                            max_rows=max_rows)
+        # print(values)
         factors_c = [self._multipliers[m] for m in values['unit_factor_c']]
-        factors_r = [self._multipliers[m] for m in values['unit_factor_r']]
         data = np.empty(len(values), dtype=vcr_type)
-        print(data)
+
         for i, v in enumerate(values):
-            data[i] = (v['V'], v['C'] * factors_c, v['R'] * factors_r)
+            data[i] = (v['V'], v['C'] * factors_c[i], v['R'])
+        # self._print(data)
         msg = 'Read impedance data from {0}'.format(self._resourceName)
         self._print(msg)
         return data
