@@ -166,12 +166,11 @@ class ArduinoBoard:
             If the Keithley source-meter was already connected.
         """
         if not self._keithleyConnected:
-            pin = self._pinMappings['keithley']
-            q = r'TOGGLE {0} ON'.format(pin)
+            q = r'TOGGLE PIN_KEITHLEY ON'
             self._board_write(q)
             self._keithleyConnected = True
-            if pin in self._activePins:
-                self._activePins.remove(pin)
+            if 'keithley' in self._activePins:
+                self._activePins.remove('keithley')
         else:
             msg = 'Keithley was already connected to {0} - {1}'.format(self._name, self._address)
             raise Warning(msg)
@@ -186,11 +185,11 @@ class ArduinoBoard:
             If the Keithley source meter was already disconnected.
         """
         if self._keithleyConnected:
-            pin = self._pinMappings['keithley']
-            q = r'TOGGLE {0} OFF'.format(pin)
+            q = r'TOGGLE PIN_KEITHLEY OFF'
             self._board_write(q)
-            if pin not in self._activePins:
-                self._activePins.append(pin)
+            if 'keithley' not in self._activePins:
+                self._activePins.append('keithley')
+            self._keithleyConnected = False
         else:
             msg = 'Keithley was already disconnected from {0} - {1}'.format(self._name, self._address)
             raise Warning(msg)
@@ -217,8 +216,8 @@ class ArduinoBoard:
         Warning
             If the pin was already connected.
         """
-        if pin_number in self._pinMappings[pin_number]:
-            pin = self._pinMappings[pin_number]
+        if pin_number in self._pinMappings:
+            pin = 'P{0:d}'.format(pin_number)
         else:
             message = 'Invalid pin number: \'{0}\'.'.format(pin_number)
             raise errors.ArduinoError(address=self._address, name=self._name, message=message)
@@ -249,8 +248,8 @@ class ArduinoBoard:
         Warning
             If the pin was already disconnected.
         """
-        if pin_number in self._pinMappings[pin_number]:
-            pin = self._pinMappings[pin_number]
+        if pin_number in self._pinMappings:
+            pin = 'P{0:d}'.format(pin_number)  # self._pinMappings[pin_number]
         else:
             message = 'Invalid pin number: \'{0}\'.'.format(pin_number)
             raise errors.ArduinoError(address=self._address, name=self._name, message=message)
@@ -258,7 +257,7 @@ class ArduinoBoard:
         if pin in self._activePins:
             q = r'TOGGLE {0} OFF'.format(pin)
             self._board_write(q)
-            self._activePins.append(pin)
+            self._activePins.remove(pin)
         else:
             msg = 'Pin #{0} was already disconnected in {1} - {2}.'.format(pin_number, self._name, self._address)
             raise Warning(msg)
@@ -273,7 +272,7 @@ class ArduinoBoard:
             If the fan was already on.
         """
         if not self._fanOn:
-            pin = self._pinMappings['fan']
+            pin = 'PIN_FAN'
             q = r'TOGGLE {0} ON'.format(pin)
             self._board_write(q)
             self._fanOn = True
@@ -293,7 +292,7 @@ class ArduinoBoard:
             If the fan was already off.
         """
         if self._fanOn:
-            pin = self._pinMappings['fan']
+            pin = 'PIN_FAN'
             q = r'TOGGLE {0} OFF'.format(pin)
             self._board_write(q)
             self._fanOn = False
@@ -462,3 +461,4 @@ class ArduinoBoard:
 
     def __del__(self):
         self.disconnect()
+        self._board = None

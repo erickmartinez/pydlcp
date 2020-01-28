@@ -1,6 +1,7 @@
 import numpy as np
 from pydlcp import visa_instrument as vi
 import pyvisa
+from io import StringIO
 
 # The return type for a voltage sweep
 vcr_type = np.dtype([('V', 'd'), ('C', 'd'), ('R', 'd')])
@@ -135,7 +136,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         program += "'70 NOA={0}',".format(number_of_averages)  # Number of Averages
         program += "'80 OSC={0:.3f};FREQ={1:.3E}',".format(osc_amplitude, frequency)  # AC Amplitude (V) & Frequency
         program += "'90 START={0:.3f};STOP={1:.3f}',".format(voltage_start, voltage_stop)
-        program += "'100 STEP={0.4f}',".format(voltage_step)  # DC Sweep step magnitude
+        program += "'100 STEP={0:.4f}',".format(voltage_step)  # DC Sweep step magnitude
         program += "'110 DTIME=0',"  # Delay time set to 0
         program += "'120 SHT1',"  # Short Calibration set to On
         program += "'130 OPN1',"  # Open Calibration set to On
@@ -149,7 +150,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         self._status = "running"
         # Write the program on the impedance analyzer
         self.write(program)
-        response = self.query_ascii('RUN')
+        response = self.query('RUN')
         self.write('FNC2')
         # values = values[:-1] # Remove character tail
         data = self.parse_impedance_data(response)
@@ -243,7 +244,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                                               frequency,
                                               bias)
             self.write(program)
-            response = self.query_ascii('RUN')
+            response = self.query('RUN')
             self.write('FNC2')
             data = self.parse_impedance_data(response)
             results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0], data['R'][0])
@@ -281,15 +282,17 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         np.ndarray
             The parsed response in the form of an array containing voltage, capacitance and resistance as columns
         """
-        skip_rows = kwargs.get('skip_rows', 4)
-        values = np.loadtxt(response,
+        skip_rows = kwargs.get('skip_rows', 2)
+        values = np.loadtxt(StringIO(response),
                             skiprows=skip_rows,
-                            dtype={'names': ('c1', 's2', 'V', 'C', 'unit_factor', 'R', 's7', 's8'),
-                                   'formats': ('U1', 'd', 'd', 'd', 'U1', 'd', 'd', 'd')})
-        factors = [self._multipliers[m] for m in values['unit_factor']]
-        data = np.empty(len(factors), dtype=vcr_type)
+                            dtype={'names': ('n', 'V', 'C', 'unit_factor_c', 'R', 'unit_factor_r'),
+                                   'formats': ('i4', 'd', 'd', 'S1', 'd', 'S1')})
+        factors_c = [self._multipliers[m] for m in values['unit_factor_c']]
+        factors_r = [self._multipliers[m] for m in values['unit_factor_r']]
+        data = np.empty(len(values), dtype=vcr_type)
+        print(data)
         for i, v in enumerate(values):
-            data[i] = (v['V'], v['C'] * factors, v['R'])
+            data[i] = (v['V'], v['C'] * factors_c, v['R'] * factors_r)
         msg = 'Read impedance data from {0}'.format(self._resourceName)
         self._print(msg)
         return data

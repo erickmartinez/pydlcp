@@ -102,6 +102,24 @@ class VisaInstrument:
         else:
             raise TypeError('Invalid query: \'{0}\'.'.format(string))
 
+    def query(self, q: str):
+        """
+        Send a query to the impedance analyzer
+        Parameters
+        ----------
+        q: str
+            The query
+
+        Returns
+        -------
+        str
+            The response from the impedance analyzer
+        """
+        values = None
+        if isinstance(q, str):
+            values = self._instrument.query(q)
+        return values
+
     def query_ascii(self, q: str, **kwargs):
         """
         Parameters

@@ -4,17 +4,17 @@
 #include <SPI.h>
 #include "Adafruit_MAX31855.h"
 
-#define P1 ${p1}
-#define P2 ${p2}
-#define P3 ${p3}
-#define P4 ${p4}
-#define P5 ${p5}
-#define P6 ${p6}
-#define P7 ${p7}
-#define P8 ${p8}
-#define PIN_KEITHLEY ${keithley}
-#define PIN_FAN ${fan}
-#define MAXCS   ${thermocouple}
+#define P1 2
+#define P2 3
+#define P3 4
+#define P4 5
+#define P5 6
+#define P6 7
+#define P7 8
+#define P8 9
+#define PIN_KEITHLEY A0
+#define PIN_FAN A1
+#define MAXCS   10
 
 CmdCallback<3> cmdCallback;
 char strHello[]     = "HELLO";
