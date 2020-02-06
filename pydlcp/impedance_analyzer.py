@@ -12,8 +12,7 @@ dlcp_type = np.dtype([('osc_level', 'd'),
                       ('bias', 'd'),
                       ('nominal_bias', 'd'),
                       ('V', 'd'),
-                      ('C', 'd'),
-                      ('R', 'd')])
+                      ('C', 'd')])
 
 
 class ImpedanceAnalyzer(vi.VisaInstrument):
@@ -158,14 +157,15 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         response = self.query("RUN")
         # values = values[:-1] # Remove character tail
         data = self.parse_impedance_data(response, n_voltages)
-        # time.sleep(4)
-        # self.write('FNC2')
+        time.sleep(1)
+        # self.write('PSTOP')
+        self.write('FNC2')
         self._status = "idle"
         return data
 
     def connect(self):
         super().connect()
-        self._instrument.timeout = 120000
+        self._instrument.timeout = 60000
         # self._instrument.read_termination = '\n'
         # self._instrument.write_termination = '\n'
 
@@ -179,19 +179,24 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         """
         program = 'PROG'
         program += "'10 FNC1',"  # Impedance Measurement
-        program += "'20 IMP5',"  # Cs-Rs circuit
-        program += "'30 {0}',"  # The integration time
-        program += "'40 NOA={1}',"  # Number of Averages
-        program += "'50 OSC={2:.3f};FREQ={3:.3E};BIAS={4:.3E}',"  # AC Amplitude (V), Frequency (Hz) & Bias (V)
-        program += "'60 DTIME=0',"  # Delay time set to 0
-        program += "'70 SHT1',"  # Short Calibration set to On
-        program += "'80 OPN1',"  # Open Calibration set to On
-        program += "'90 AUTO',"  # Auto-Scale A & B
-        program += "'100 CPYM2',"  # Copy Data Mode 2
-        program += "'110 SWTRG',"  # Single Trigger Run
-        program += "'120 COPY',"  # Copy Data to Instrument
-        program += "'130 DCOFF',"  # Attempt to turn off DC Bias (Doesn't work)
-        program += "'140 END'"
+        program += "'20 SWM2',"  # Single Sweep
+        program += "'30 IMP5',"  # Cs-Rs circuit
+        program += "'40 SWP2',"  # DC Bias Sweep
+        # program += "'50 SWD1',"  # Sweep direction up
+        program += "'60 {0}',"  # The integration time
+        program += "'70 NOA={1}',"  # Number of Averages
+        program += "'80 OSC={2:.4f};FREQ={3:.3E};BIAS={4:.4f}',"  # AC Amplitude (V), Frequency (Hz) & Bias (V)
+        program += "'90 START={4:.3f};STOP={4:.3f}',"
+        program += "'100 MANUAL={4:.4f}; NOP=20',"
+        program += "'110 DTIME=0',"  # Delay time set to 0
+        program += "'120 SHT1',"  # Short Calibration set to On
+        program += "'130 OPN1',"  # Open Calibration set to On
+        program += "'140 AUTO',"  # Auto-Scale A & B
+        program += "'150 CPYM2',"  # Copy Data Mode 2
+        program += "'160 SWTRG',"  # Single Trigger Run
+        program += "'170 COPY',"  # Copy Data to Instrument
+        program += "'180 DCOFF',"  # Attempt to turn off DC Bias (Doesn't work)
+        program += "'190 END'"
         return program
 
     def dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,
@@ -245,21 +250,27 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
         ac_levels = np.arange(start_amplitude, stop_amplitude + step_amplitude, step_amplitude)
         n_levels = len(ac_levels)
-        dc_bias = np.nonzero(nominal_bias + n_levels)
+        dc_bias = nominal_bias - 0.5*ac_levels
         results = np.empty(n_levels, dtype=dlcp_type)
         program_template = self._get_dlcp_template()
         self._status = "running"
+        self.write('FNC2')
         for i, ac_level, bias in zip(range(n_levels), ac_levels, dc_bias):
             program = program_template.format(integration_time,
                                               number_of_averages,
                                               ac_level,
                                               frequency,
                                               bias)
+            # self._print(program)
             self.write(program)
+            time.sleep(1)
             response = self.query('RUN')
+            time.sleep(1)
+            print(response)
+            data = self.parse_dlcp_data(response, 20)
             self.write('FNC2')
-            data = self.parse_impedance_data(response)
-            results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0], data['R'][0])
+
+            results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0])
         self._status = "idle"
         return results
 
@@ -279,6 +290,35 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             msg = 'The wait time must be a positive integer. Ignoring provided value of \'{0}\'.'.format(seconds)
             self._print(msg=msg, level='WARNING')
 
+    def parse_dlcp_data(self, response: str, points: int):
+        """
+        Parses the response from the impedance analyzer for a DLCP measurement
+
+        Parameters
+        ----------
+        response: str
+            The response from the impedance analyzer
+        points: int
+            The number of points to average
+
+        Returns
+        -------
+        vcr_type
+            The parsed data
+        """
+        values = np.loadtxt(StringIO(response),
+                            skiprows=1,
+                            usecols=(1, 2, 3, 4),
+                            dtype={'names': ('V', 'C', 'unit_factor_c', 'R'),
+                                   'formats': ('d', 'd', 'U1', 'd')},
+                            max_rows=points)
+
+        factors_c = [self._multipliers[m] for m in values['unit_factor_c']]
+
+        data = np.array([(np.mean(values['V']), np.mean(values['C'] * factors_c), np.mean(values['R']))], dtype=vcr_type)
+
+        return data
+
     def parse_impedance_data(self, response: str, max_rows: int, **kwargs) -> np.ndarray:
         """
         Parses the ASCII response from the Impedance Analyzer into an array of numbers
@@ -296,7 +336,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         np.ndarray
             The parsed response in the form of an array containing voltage, capacitance and resistance as columns
         """
-        skip_rows = kwargs.get('skip_rows', 2)
+        skip_rows = kwargs.get('skip_rows', 1)
         # self._print(response)
         # print('max_rows = {0:d}'.format(max_rows))
         values = np.loadtxt(StringIO(response),

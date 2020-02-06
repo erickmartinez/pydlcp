@@ -125,9 +125,9 @@ void functTogglePin(CmdParser *myParser)
       digitalWrite(PIN_FAN, LOW);
     }
   } else if (myParser->equalCmdParam(1,"PIN_KEITHLEY") ) {
-    if (myParser->equalCmdParam(2,"ON")) {
+    if (myParser->equalCmdParam(2,"OFF")) {
       digitalWrite(PIN_KEITHLEY, LOW);
-    } else if (myParser->equalCmdParam(2, "OFF") ) {
+    } else if (myParser->equalCmdParam(2, "ON") ) {
       digitalWrite(PIN_KEITHLEY, HIGH);
     }
   }

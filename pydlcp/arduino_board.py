@@ -95,7 +95,7 @@ class ArduinoBoard:
                     'thermocouple': '10',
                     1: '2', 2: '3', 3: '4', 4: '5', 5: '6', 6: '7', 7: '8', 8: '9'}
     _fanOn = False
-    _keithleyConnected = False
+    _keithleyConnected = True
     _logger: logging.Logger = None
     _loggingLevels = {'NOTSET': logging.NOTSET,
                       'DEBUG': logging.DEBUG,
