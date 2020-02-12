@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>781</width>
+      <height>421</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_unitTabs">
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="tabPosition">
+        <enum>QTabWidget::West</enum>
+       </property>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Tab 1</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Tab 2</string>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Load_Acquisition_Settings"/>
+    <addaction name="actionLoad_System_Settings"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Measurement">
+    <property name="title">
+     <string>&amp;Measurement</string>
+    </property>
+    <addaction name="actionTest_Units"/>
+    <addaction name="actionStart"/>
+    <addaction name="separator"/>
+    <addaction name="actionSto_p"/>
+   </widget>
+   <widget class="QMenu" name="menu_System">
+    <property name="title">
+     <string>&amp;System</string>
+    </property>
+    <addaction name="action_Connect_Devices"/>
+    <addaction name="action_Disconnect_Devices"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_System"/>
+   <addaction name="menu_Measurement"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Load_Acquisition_Settings"/>
+   <addaction name="action_Connect_Devices"/>
+   <addaction name="actionTest_Units"/>
+   <addaction name="actionStart"/>
+   <addaction name="actionSto_p"/>
+  </widget>
+  <action name="action_Load_Acquisition_Settings">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/monitor.png</normaloff>:/icons/monitor.png</iconset>
+   </property>
+   <property name="text">
+    <string>Lo&amp;ad Acquisition Settings</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+  </action>
+  <action name="actionLoad_System_Settings">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/spanner.png</normaloff>:/icons/spanner.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load &amp;System Settings</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionTest_Units">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/check.png</normaloff>:/icons/check.png</iconset>
+   </property>
+   <property name="text">
+    <string>Run &amp;Test</string>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/door-exit.png</normaloff>:/icons/door-exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Start Measurement</string>
+   </property>
+  </action>
+  <action name="actionSto_p">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sto&amp;p</string>
+   </property>
+  </action>
+  <action name="action_Connect_Devices">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/off.png</normaloff>
+     <normalon>:/icons/switch.png</normalon>:/icons/off.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Connect Devices</string>
+   </property>
+  </action>
+  <action name="action_Disconnect_Devices">
+   <property name="text">
+    <string>&amp;Disconnect Devices</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="images/dlcp_images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
