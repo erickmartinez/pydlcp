@@ -77,8 +77,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         super().__init__(address, 'HP4194A', resource_manager)
         self._debug = debug
 
-    def cv_sweep(self, voltage_start: float, voltage_step: float, voltage_stop: float, frequency: float,
-                 **kwargs) -> np.ndarray:
+    def cv_sweep(self,
+                 ) -> np.ndarray:
         """
         Parameters
         ---------
@@ -182,24 +182,24 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         program += "'20 SWM2',"  # Single Sweep
         program += "'30 IMP5',"  # Cs-Rs circuit
         program += "'40 SWP2',"  # DC Bias Sweep
-        # program += "'50 SWD1',"  # Sweep direction up
+        program += "'50 SWD1',"  # Sweep direction up
         program += "'60 {0}',"  # The integration time
         program += "'70 NOA={1}',"  # Number of Averages
         program += "'80 OSC={2:.4f};FREQ={3:.3E};BIAS={4:.4f}',"  # AC Amplitude (V), Frequency (Hz) & Bias (V)
         program += "'90 START={4:.3f};STOP={4:.3f}',"
-        program += "'100 MANUAL={4:.4f}; NOP=20',"
-        program += "'110 DTIME=0',"  # Delay time set to 0
+        program += "'100 MANUAL={4:.4f}; NOP=2',"
+        program += "'110 DTIME=100',"  # Delay time set to 100 ms
         program += "'120 SHT1',"  # Short Calibration set to On
         program += "'130 OPN1',"  # Open Calibration set to On
         program += "'140 AUTO',"  # Auto-Scale A & B
         program += "'150 CPYM2',"  # Copy Data Mode 2
         program += "'160 SWTRG',"  # Single Trigger Run
         program += "'170 COPY',"  # Copy Data to Instrument
-        program += "'180 DCOFF',"  # Attempt to turn off DC Bias (Doesn't work)
+        program += "'180 DCOFF',"  # Attempt to turn off DC Bias
         program += "'190 END'"
         return program
 
-    def dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,
+    def dlcp_sweep(self, nominal_bias: float, osc_start: float, osc_step: float, osc_stop: float,
                    frequency: float, **kwargs) -> np.ndarray:
         """
         Performs a DLCP sweep
@@ -208,11 +208,11 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         ----------
         nominal_bias: float
             The nominal bias for the DLCP sweep
-        start_amplitude: float
+        osc_start: float
             The starting amplitude for the oscillator level sweep (V)
-        step_amplitude: float
+        osc_step: float
             The step size for the amplitude of the oscillator level sweep (V)
-        stop_amplitude: float
+        osc_stop: float
             The stop value for the oscillator level sweep (V)
         frequency: float
             The oscillator frequency (Hz)
@@ -248,7 +248,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         if number_of_averages not in self._noa:
             raise ValueError('Invalid number of averages.')
 
-        ac_levels = np.arange(start_amplitude, stop_amplitude + step_amplitude, step_amplitude)
+        ac_levels = np.arange(osc_start, osc_stop + osc_step, osc_step)
         n_levels = len(ac_levels)
         dc_bias = nominal_bias - 0.5*ac_levels
         results = np.empty(n_levels, dtype=dlcp_type)
@@ -267,7 +267,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             response = self.query('RUN')
             time.sleep(1)
             print(response)
-            data = self.parse_dlcp_data(response, 20)
+            data = self.parse_dlcp_data(response, 2)
             self.write('FNC2')
 
             results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0])

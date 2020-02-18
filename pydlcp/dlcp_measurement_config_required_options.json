@@ -1,0 +1,17 @@
+{
+  "dlcp" : [
+    "integration_time",
+    "number_of_averages",
+    "amplitude_start",
+    "amplitude_step",
+    "amplitude_stop",
+    "frequency",
+    "nominal_bias_start",
+    "nominal_bias_stop",
+    "nominal_bias_step"
+  ],
+  "general": [
+    "base_path",
+    "device_name"
+  ]
+}

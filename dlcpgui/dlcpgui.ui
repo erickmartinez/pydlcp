@@ -6,60 +6,803 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>840</width>
+    <height>560</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>840</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>PyDLCP</string>
+  </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PyDLCP is an acquisition tool that collects capacitance data sweeping different oscillator levels and nominal biases. The data is stored in hfds files for later processing. The sweeps provide data to be fitted by polynomial function to estimate the drive level as a function of a position variable. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="inputMethodHints">
+   <set>Qt::ImhNone</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>781</width>
-      <height>421</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_unitTabs">
-     <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="tabPosition">
-        <enum>QTabWidget::West</enum>
-       </property>
-       <widget class="QWidget" name="tab_3">
-        <attribute name="title">
-         <string>Tab 1</string>
-        </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>840</width>
+     <height>450</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_10">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_center">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_Acquisition">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupBox_Devices">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>265</width>
+            <height>85</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>System</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_LEDs">
+             <item>
+              <widget class="QWidget" name="widgetImpedanceAnalyzerLamp" native="true">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: #ff0000;
+margin: 4px;
+border-radius: 8px;
+border: 3px solid #333;
+</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_ImpendanceAnalyzerLampLabel">
+               <property name="text">
+                <string>Impedance Analyzer</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_Power">
+             <item>
+              <widget class="QPushButton" name="pushButton_Power">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open the connection to the instruments.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Connect</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_AcquisitionGeneral">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>130</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>General</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QFormLayout" name="formLayout_acquisition">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelFrequency">
+               <property name="text">
+                <string>Frequency (Hz):</string>
+               </property>
+               <property name="buddy">
+                <cstring>lineEditFrequency</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEditFrequency">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator frequency in Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>1.0E+06</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="labelIntegrationTime">
+               <property name="text">
+                <string>Integration Time:</string>
+               </property>
+               <property name="buddy">
+                <cstring>comboBoxIntegrationTime</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboBoxIntegrationTime">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The integration time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="currentText">
+                <string>Medium (5 ms)</string>
+               </property>
+               <property name="currentIndex">
+                <number>1</number>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Short (500 us)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Medium (5 ms)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Long (100 ms)</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="labelNumberOfAverages">
+               <property name="text">
+                <string>Number of Averages:</string>
+               </property>
+               <property name="buddy">
+                <cstring>comboBoxNumberOfAverages</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="comboBoxNumberOfAverages">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of averages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="currentIndex">
+                <number>3</number>
+               </property>
+               <property name="minimumContentsLength">
+                <number>0</number>
+               </property>
+               <item>
+                <property name="text">
+                 <string>1</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>8</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>16</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>32</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>64</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>128</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>256</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="labelDelay">
+               <property name="text">
+                <string>Delay:</string>
+               </property>
+               <property name="buddy">
+                <cstring>spinBoxDelay</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="spinBoxDelay">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time before the acquisition (in milliseconds).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (ms)</string>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="singleStep">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBoxAcquisition_Sweep">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>265</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>DLCP Sweep</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QFormLayout" name="formLayout_DLCPSweep">
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelOscLevelStart">
+               <property name="text">
+                <string>Osc Level Start:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBoxOscLevelStart</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxOscLevelStart">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level start value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (mV p-p)</string>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="minimum">
+                <double>10.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>5.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>50.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="labelOscLevelStep">
+               <property name="text">
+                <string>Osc Level Step:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBox_OscLevelStep</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_OscLevelStep">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level step value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (mV p-p)</string>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="minimum">
+                <double>10.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>5.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="labelOscLevelStop">
+               <property name="text">
+                <string>Osc Level Stop:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBox_OscLevelStop</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_OscLevelStop">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level stop value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (mV p-p)</string>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="minimum">
+                <double>20.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>5.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="labelNominalBiasStart">
+               <property name="text">
+                <string>Nominal Bias Start:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBox_NominalBiasStart</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_NominalBiasStart">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias start value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (V)</string>
+               </property>
+               <property name="minimum">
+                <double>-40.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>40.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>-5.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="labelNominalBiasStep">
+               <property name="text">
+                <string>Nominal Bias Step:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBox_NominalBiasStep</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_NominalBiasStep">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias step value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (V)</string>
+               </property>
+               <property name="minimum">
+                <double>-1.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="labelNominalBiasStop">
+               <property name="text">
+                <string>Nominal Bias Stop:</string>
+               </property>
+               <property name="buddy">
+                <cstring>doubleSpinBox_NominalBiasStop</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_NominalBiasStop">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias stop value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> (V)</string>
+               </property>
+               <property name="minimum">
+                <double>-40.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>40.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>-3.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_Plot">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>547</width>
+          <height>417</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Graph</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_Status">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <item>
+            <widget class="QWidget" name="widgetStatusLamp" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="toolTipDuration">
+              <number>-1</number>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #fff;
+margin: 4px;
+border-radius: 8px;
+border: 3px solid #333;
+</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_SystemStatus">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Idle</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_status">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>24</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelProgress">
+             <property name="text">
+              <string>Point</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEditProgress">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>133</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The progress of the measurement.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="toolTipDuration">
+              <number>-1</number>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-weight: bold;</string>
+             </property>
+             <property name="text">
+              <string>0/0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QWidget" name="widgetCVPlot" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>527</width>
+             <height>325</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab_4">
-        <attribute name="title">
-         <string>Tab 2</string>
-        </attribute>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_start">
+      <item>
+       <widget class="QLabel" name="label_Storge">
+        <property name="text">
+         <string>Save Folder</string>
+        </property>
        </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+      </item>
+      <item>
+       <widget class="QPlainTextEdit" name="plainTextEdit_SaveFolder">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_ChangeDir">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the folder to which the data will be saved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">padding: 3.5px 8px;</string>
+        </property>
+        <property name="text">
+         <string>Change Folder</string>
+        </property>
+        <property name="icon">
+         <iconset resource="images/dlcp_images.qrc">
+          <normaloff>:/icons/folder-into.png</normaloff>:/icons/folder-into.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_start">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_AbortMeasurement">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Aborts the current measurement!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background: #ff0000;
+font-weight: bold;</string>
+        </property>
+        <property name="text">
+         <string>Abort</string>
+        </property>
+        <property name="icon">
+         <iconset resource="images/dlcp_images.qrc">
+          <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_StartMeasurement">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Starts the acquisition.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background: #00ff00;
+font-weight: bold;</string>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+        <property name="icon">
+         <iconset resource="images/dlcp_images.qrc">
+          <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>840</width>
      <height>21</height>
     </rect>
    </property>
@@ -68,7 +811,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Load_Acquisition_Settings"/>
-    <addaction name="actionLoad_System_Settings"/>
+    <addaction name="actionSelect_Save_F_older"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
@@ -76,7 +819,7 @@
     <property name="title">
      <string>&amp;Measurement</string>
     </property>
-    <addaction name="actionTest_Units"/>
+    <addaction name="actionTest"/>
     <addaction name="actionStart"/>
     <addaction name="separator"/>
     <addaction name="actionSto_p"/>
@@ -97,6 +840,12 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
@@ -107,8 +856,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_Load_Acquisition_Settings"/>
+   <addaction name="actionSelect_Save_F_older"/>
    <addaction name="action_Connect_Devices"/>
-   <addaction name="actionTest_Units"/>
+   <addaction name="actionTest"/>
    <addaction name="actionStart"/>
    <addaction name="actionSto_p"/>
   </widget>
@@ -136,10 +886,10 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionTest_Units">
+  <action name="actionTest">
    <property name="icon">
     <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/check.png</normaloff>:/icons/check.png</iconset>
+     <normaloff>:/icons/test.png</normaloff>:/icons/test.png</iconset>
    </property>
    <property name="text">
     <string>Run &amp;Test</string>
@@ -187,9 +937,55 @@
     <string>&amp;Disconnect Devices</string>
    </property>
   </action>
+  <action name="actionSelect_Save_F_older">
+   <property name="icon">
+    <iconset resource="images/dlcp_images.qrc">
+     <normaloff>:/icons/folder-into.png</normaloff>:/icons/folder-into.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select Save &amp;Folder</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_Power</tabstop>
+  <tabstop>doubleSpinBoxOscLevelStart</tabstop>
+  <tabstop>doubleSpinBox_OscLevelStep</tabstop>
+  <tabstop>doubleSpinBox_OscLevelStop</tabstop>
+  <tabstop>doubleSpinBox_NominalBiasStart</tabstop>
+  <tabstop>doubleSpinBox_NominalBiasStep</tabstop>
+  <tabstop>doubleSpinBox_NominalBiasStop</tabstop>
+  <tabstop>lineEditFrequency</tabstop>
+  <tabstop>comboBoxIntegrationTime</tabstop>
+  <tabstop>comboBoxNumberOfAverages</tabstop>
+  <tabstop>spinBoxDelay</tabstop>
+  <tabstop>pushButton_ChangeDir</tabstop>
+  <tabstop>pushButton_StartMeasurement</tabstop>
+  <tabstop>lineEditProgress</tabstop>
+  <tabstop>pushButton_AbortMeasurement</tabstop>
+ </tabstops>
  <resources>
   <include location="images/dlcp_images.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>action_Quit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>419</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>folder_dialog()</slot>
+ </slots>
 </ui>

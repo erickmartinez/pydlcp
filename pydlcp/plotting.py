@@ -4,18 +4,20 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+import h5py
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.ticker import ScalarFormatter
 from typing import List
-from pydlcp import datastorage, bts
+from pydlcp import DLCPDataStore as dh5
 
-h5_list = List[datastorage.H5Store]
 axes_list = List[Axes]
 
 
 class DataPlotter:
 
-    _bts: bts.BTS = None
+    _colorNorm: object = None
+    _colorMap: mpl.cm = None
+    _scalarMappable: mpl.colors.cm.ScalarMappable = None
     _defaultPlotStyle = {'font.size': 16,
                          'font.family': 'Arial',
                          'font.weight': 'regular',
@@ -48,28 +50,27 @@ class DataPlotter:
                          'axes.titlepad': 7,
                          'figure.titleweight': 'bold',
                          'figure.dpi': 100}
-    _h5DataStores: h5_list = []
+    _h5DataStore: dh5.DLCPDataStore = None
 
-    def __init__(self, bts_experiment: bts.BTS):
-        self._bts = bts_experiment
+    def __init__(self, data_store: dh5.DLCPDataStore):
         mpl.rcParams.update(self._defaultPlotStyle)
-        # Create a color map
-        self._colorNorm = mpl.colors.Normalize(vmin=0, vmax=bts_experiment.max_time)
-        self._timeColorMap = mpl.cm.get_cmap('rainbow')
+        self._h5DataStore = data_store
+
+    def prepare_color_map(self, color_palette: str = 'winter'):
+        # Find the number of nominal bias stored in the file
+        npoints = self._h5DataStore.count_data_sets(path='/dlcp')
+        biases = np.empty(npoints)
+        for i in range(npoints):
+            ds_name = '/dlcp/sweep_{0:d}'.format(i)
+            metadata = self._h5DataStore.get_metadata(group=ds_name)
+            biases = float(metadata['nominal_bias'])
+            # Create a color map
+        self._colorNorm = mpl.colors.Normalize(vmin=np.amin(biases), vmax=np.amax(biases))
+        self._colorMap = mpl.cm.get_cmap(color_palette)
         # create a ScalarMappable and initialize a data structure
         self._scalarMappable = mpl.cm.ScalarMappable(cmap=self._timeColorMap, norm=self._colorNorm)
 
-    def plot_cv(self, fig: Figure, axes: axes_list,  clean: bool = True):
-        for i, d in enumerate(self._bts.clean_devices):
-            h5_data_store = self._bts.get_device_storage(device=d, clean=clean)
-            cv_data = h5_data_store.get_bts_cv()
-            stress_time = cv_data['stress_time']
-            ax: Axes = axes[i]
-            # if the axis already has lines just append
-            n_line = len(ax.lines)
-            for j, t in enumerate(stress_time[n_line:]):
-                c = self._timeColorMap(self._colorNorm(t))
-                ax.plot(cv_data['voltage'][j], cv_data['capacitace'][j], color=c)
+    def plo
 
 
 
