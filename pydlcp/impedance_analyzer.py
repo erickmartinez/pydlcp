@@ -1,4 +1,6 @@
+import os
 import numpy as np
+import pandas as pd
 from pydlcp import visa_instrument as vi
 import pyvisa
 from io import StringIO
@@ -266,8 +268,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             time.sleep(1)
             response = self.query('RUN')
             time.sleep(1)
-            print(response)
-            data = self.parse_dlcp_data(response, 2)
+            # print(response)
+            data = self.parse_dlcp_data(response, 20)
             self.write('FNC2')
 
             results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0])
@@ -315,7 +317,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
         factors_c = [self._multipliers[m] for m in values['unit_factor_c']]
 
-        data = np.array([(np.mean(values['V']), np.mean(values['C'] * factors_c), np.mean(values['R']))], dtype=vcr_type)
+        data = np.array([(np.mean(values['V']), np.mean(values['C'] * factors_c), np.mean(values['R']))],
+                        dtype=vcr_type)
 
         return data
 
@@ -355,3 +358,52 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         msg = 'Read impedance data from {0}'.format(self._resourceName)
         self._print(msg)
         return data
+
+    def run_dlcp_one_pin(self, device_id: int, pin_num: int, start: float, stop: float, step: float):
+        """
+        Runs the dlcp measurement for a single pin
+
+        Parameters
+        ----------
+        device_id: int
+            The device id number that is being tested
+        pin_num: int
+            The pin number of device being tested
+        start: float
+            DC Bias start condition
+        stop: float
+            DC Bias stop condition
+        step: float
+            DC Bias step between each iteration
+        """
+        import os
+        import platform
+        import matplotlib.pyplot as plt
+        from matplotlib.colors import Normalize
+        from matplotlib import cm
+
+        cmap = cm.get_cmap('winter')
+        fig, ax = plt.subplots()
+
+        nominal_biases = np.arange(start=start, stop=(stop+step), step=step)
+        normalize = Normalize(vmin=np.amin(nominal_biases), vmax=np.amax(nominal_biases))
+        colors = [cmap(normalize(b)) for b in nominal_biases]
+        for i, nb in enumerate(nominal_biases):
+            data_dir = r"G:\Shared drives\FenningLab2\Projects\PVRD1\ExpData\DLCP\SiNx\D" + str(device_id) \
+                       + "-p" + str(pin_num)
+            if platform.system() == 'Windows':
+                data_dir = r"\\?\\" + data_dir
+            if not os.path.exists(data_dir):
+                os.makedirs(data_dir)
+            filename = 'dlcp_D{0:d}_{1:.3}.csv'.format(device_id, nb)
+            print('Runnig DLCP for nominal bias = {0:.3f}'.format(nb))
+            dlcp_data = self.dlcp_sweep(nominal_bias=nb, start_amplitude=0.01, step_amplitude=0.01, stop_amplitude=1.0,
+                                        frequency=1E6, noa=8, integration_time='ITM2')
+            df = pd.DataFrame(data=dlcp_data)
+            df.to_csv(os.path.join(data_dir, filename))
+            ax.plot(dlcp_data['osc_level']*1000, dlcp_data['C']*1E12, 'o', color=colors[i])
+
+        ax.set_xlabel('Oscillator Level (mV p-p)')
+        ax.set_ylabel('C (pF)')
+        plt.tight_layout(h_pad=0, w_pad=0)
+        plt.show()
