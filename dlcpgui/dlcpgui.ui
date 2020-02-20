@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>840</width>
-    <height>560</height>
+    <height>566</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,6 +18,10 @@
   </property>
   <property name="windowTitle">
    <string>PyDLCP</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="dlcp_images.qrc">
+    <normaloff>:/icons/images/scope.png</normaloff>:/icons/images/scope.png</iconset>
   </property>
   <property name="whatsThis">
    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PyDLCP is an acquisition tool that collects capacitance data sweeping different oscillator levels and nominal biases. The data is stored in hfds files for later processing. The sweeps provide data to be fitted by polynomial function to estimate the drive level as a function of a position variable. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -116,6 +120,10 @@ border: 3px solid #333;
                </property>
                <property name="text">
                 <string>Connect</string>
+               </property>
+               <property name="icon">
+                <iconset resource="dlcp_images.qrc">
+                 <normaloff>:/icons/images/plug.png</normaloff>:/icons/images/plug.png</iconset>
                </property>
               </widget>
              </item>
@@ -675,7 +683,7 @@ border: 3px solid #333;
          <item>
           <widget class="QWidget" name="widgetCVPlot" native="true">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -685,6 +693,9 @@ border: 3px solid #333;
              <width>527</width>
              <height>325</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background: #fff;</string>
            </property>
           </widget>
          </item>
@@ -739,8 +750,8 @@ border: 3px solid #333;
          <string>Change Folder</string>
         </property>
         <property name="icon">
-         <iconset resource="images/dlcp_images.qrc">
-          <normaloff>:/icons/folder-into.png</normaloff>:/icons/folder-into.png</iconset>
+         <iconset resource="dlcp_images.qrc">
+          <normaloff>:/icons/images/folder-into.png</normaloff>:/icons/images/folder-into.png</iconset>
         </property>
        </widget>
       </item>
@@ -770,8 +781,8 @@ font-weight: bold;</string>
          <string>Abort</string>
         </property>
         <property name="icon">
-         <iconset resource="images/dlcp_images.qrc">
-          <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+         <iconset resource="dlcp_images.qrc">
+          <normaloff>:/icons/images/delete.png</normaloff>:/icons/images/delete.png</iconset>
         </property>
        </widget>
       </item>
@@ -788,8 +799,8 @@ font-weight: bold;</string>
          <string>Start</string>
         </property>
         <property name="icon">
-         <iconset resource="images/dlcp_images.qrc">
-          <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+         <iconset resource="dlcp_images.qrc">
+          <normaloff>:/icons/images/start.png</normaloff>:/icons/images/start.png</iconset>
         </property>
        </widget>
       </item>
@@ -864,8 +875,8 @@ font-weight: bold;</string>
   </widget>
   <action name="action_Load_Acquisition_Settings">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/monitor.png</normaloff>:/icons/monitor.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/monitor.png</normaloff>:/icons/images/monitor.png</iconset>
    </property>
    <property name="text">
     <string>Lo&amp;ad Acquisition Settings</string>
@@ -876,8 +887,8 @@ font-weight: bold;</string>
   </action>
   <action name="actionLoad_System_Settings">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/spanner.png</normaloff>:/icons/spanner.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/spanner.png</normaloff>:/icons/images/spanner.png</iconset>
    </property>
    <property name="text">
     <string>Load &amp;System Settings</string>
@@ -888,8 +899,8 @@ font-weight: bold;</string>
   </action>
   <action name="actionTest">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/test.png</normaloff>:/icons/test.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/test.png</normaloff>:/icons/images/test.png</iconset>
    </property>
    <property name="text">
     <string>Run &amp;Test</string>
@@ -897,8 +908,8 @@ font-weight: bold;</string>
   </action>
   <action name="action_Quit">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/door-exit.png</normaloff>:/icons/door-exit.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/door-exit.png</normaloff>:/icons/images/door-exit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -906,8 +917,8 @@ font-weight: bold;</string>
   </action>
   <action name="actionStart">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/start.png</normaloff>:/icons/images/start.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Start Measurement</string>
@@ -915,8 +926,8 @@ font-weight: bold;</string>
   </action>
   <action name="actionSto_p">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/delete.png</normaloff>:/icons/images/delete.png</iconset>
    </property>
    <property name="text">
     <string>Sto&amp;p</string>
@@ -924,23 +935,27 @@ font-weight: bold;</string>
   </action>
   <action name="action_Connect_Devices">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/off.png</normaloff>
-     <normalon>:/icons/switch.png</normalon>:/icons/off.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/off.png</normaloff>
+     <normalon>:/icons/images/switch.png</normalon>:/icons/images/off.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Connect Devices</string>
    </property>
   </action>
   <action name="action_Disconnect_Devices">
+   <property name="icon">
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/plug.png</normaloff>:/icons/images/plug.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Disconnect Devices</string>
    </property>
   </action>
   <action name="actionSelect_Save_F_older">
    <property name="icon">
-    <iconset resource="images/dlcp_images.qrc">
-     <normaloff>:/icons/folder-into.png</normaloff>:/icons/folder-into.png</iconset>
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/folder-into.png</normaloff>:/icons/images/folder-into.png</iconset>
    </property>
    <property name="text">
     <string>Select Save &amp;Folder</string>
@@ -965,7 +980,7 @@ font-weight: bold;</string>
   <tabstop>pushButton_AbortMeasurement</tabstop>
  </tabstops>
  <resources>
-  <include location="images/dlcp_images.qrc"/>
+  <include location="dlcp_images.qrc"/>
  </resources>
  <connections>
   <connection>

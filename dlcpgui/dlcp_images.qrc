@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>images/scope.png</file>
+    <file>images/plug.png</file>
+    <file>images/triangular-warning-sign.png</file>
+    <file>images/test.png</file>
+    <file>images/folder-into.png</file>
+    <file>images/switch.png</file>
+    <file>images/off.png</file>
+    <file>images/delete.png</file>
+    <file>images/check.png</file>
+    <file>images/start.png</file>
+    <file>images/test.png</file>
+    <file>images/door-exit.png</file>
+    <file>images/led_on.png</file>
+    <file>images/led_red.png</file>
+    <file>images/spanner.png</file>
+    <file>images/monitor.png</file>
+  </qresource>
+</RCC>

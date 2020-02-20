@@ -14,7 +14,9 @@ axes_list = List[Axes]
 
 
 class DataPlotter:
-
+    """
+    This class provides basic plotting functionality
+    """
     _colorNorm: object = None
     _colorMap: mpl.cm = None
     _scalarMappable: mpl.colors.cm.ScalarMappable = None
@@ -69,8 +71,6 @@ class DataPlotter:
         self._colorMap = mpl.cm.get_cmap(color_palette)
         # create a ScalarMappable and initialize a data structure
         self._scalarMappable = mpl.cm.ScalarMappable(cmap=self._timeColorMap, norm=self._colorNorm)
-
-    def plo
 
 
 
