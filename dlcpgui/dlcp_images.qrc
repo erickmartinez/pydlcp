@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>images/floppy-diskette-with-pen.png</file>
     <file>images/scope.png</file>
     <file>images/plug.png</file>
     <file>images/triangular-warning-sign.png</file>

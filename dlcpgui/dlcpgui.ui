@@ -169,19 +169,22 @@ border: 3px solid #333;
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item row="0" column="0">
-              <widget class="QLabel" name="labelFrequency">
+              <widget class="QLabel" name="label_Frequency">
                <property name="text">
                 <string>Frequency (Hz):</string>
                </property>
                <property name="buddy">
-                <cstring>lineEditFrequency</cstring>
+                <cstring>lineEdit_Frequency</cstring>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEditFrequency">
+              <widget class="QLineEdit" name="lineEdit_Frequency">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator frequency in Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="inputMask">
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>1.0E+06</string>
@@ -192,22 +195,22 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="labelIntegrationTime">
+              <widget class="QLabel" name="label_IntegrationTime">
                <property name="text">
                 <string>Integration Time:</string>
                </property>
                <property name="buddy">
-                <cstring>comboBoxIntegrationTime</cstring>
+                <cstring>comboBox_IntegrationTime</cstring>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="comboBoxIntegrationTime">
+              <widget class="QComboBox" name="comboBox_IntegrationTime">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The integration time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="currentText">
-                <string>Medium (5 ms)</string>
+                <string notr="true">Medium (5 ms)</string>
                </property>
                <property name="currentIndex">
                 <number>1</number>
@@ -230,19 +233,22 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="labelNumberOfAverages">
+              <widget class="QLabel" name="label_NumberOfAverages">
                <property name="text">
                 <string>Number of Averages:</string>
                </property>
                <property name="buddy">
-                <cstring>comboBoxNumberOfAverages</cstring>
+                <cstring>comboBox_NumberOfAverages</cstring>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QComboBox" name="comboBoxNumberOfAverages">
+              <widget class="QComboBox" name="comboBox_NumberOfAverages">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of averages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="currentText">
+                <string notr="true">8</string>
                </property>
                <property name="currentIndex">
                 <number>3</number>
@@ -298,22 +304,22 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="labelDelay">
+              <widget class="QLabel" name="label_Delay">
                <property name="text">
                 <string>Delay:</string>
                </property>
                <property name="buddy">
-                <cstring>spinBoxDelay</cstring>
+                <cstring>spinBox_Delay</cstring>
                </property>
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QSpinBox" name="spinBoxDelay">
+              <widget class="QSpinBox" name="spinBox_Delay">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time before the acquisition (in milliseconds).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="suffix">
-                <string> (ms)</string>
+                <string notr="true"> (ms)</string>
                </property>
                <property name="maximum">
                 <number>1000</number>
@@ -349,19 +355,22 @@ border: 3px solid #333;
            <item>
             <layout class="QFormLayout" name="formLayout_DLCPSweep">
              <item row="0" column="0">
-              <widget class="QLabel" name="labelOscLevelStart">
+              <widget class="QLabel" name="label_OscLevelStart">
                <property name="text">
                 <string>Osc Level Start:</string>
                </property>
                <property name="buddy">
-                <cstring>doubleSpinBoxOscLevelStart</cstring>
+                <cstring>doubleSpinBox_OscLevelStart</cstring>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBoxOscLevelStart">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_OscLevelStart">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level start value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="prefix">
+                <string notr="true"/>
                </property>
                <property name="suffix">
                 <string> (mV p-p)</string>
@@ -384,7 +393,7 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="labelOscLevelStep">
+              <widget class="QLabel" name="label_OscLevelStep">
                <property name="text">
                 <string>Osc Level Step:</string>
                </property>
@@ -397,6 +406,9 @@ border: 3px solid #333;
               <widget class="QDoubleSpinBox" name="doubleSpinBox_OscLevelStep">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level step value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="prefix">
+                <string notr="true"/>
                </property>
                <property name="suffix">
                 <string> (mV p-p)</string>
@@ -413,7 +425,7 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="labelOscLevelStop">
+              <widget class="QLabel" name="label_OscLevelStop">
                <property name="text">
                 <string>Osc Level Stop:</string>
                </property>
@@ -426,6 +438,9 @@ border: 3px solid #333;
               <widget class="QDoubleSpinBox" name="doubleSpinBox_OscLevelStop">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The oscillator level stop value in mV peak-to-peak.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="prefix">
+                <string notr="true"/>
                </property>
                <property name="suffix">
                 <string> (mV p-p)</string>
@@ -445,7 +460,7 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="labelNominalBiasStart">
+              <widget class="QLabel" name="label_NominalBiasStart">
                <property name="text">
                 <string>Nominal Bias Start:</string>
                </property>
@@ -458,6 +473,9 @@ border: 3px solid #333;
               <widget class="QDoubleSpinBox" name="doubleSpinBox_NominalBiasStart">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias start value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="prefix">
+                <string notr="true"/>
                </property>
                <property name="suffix">
                 <string> (V)</string>
@@ -477,7 +495,7 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="4" column="0">
-              <widget class="QLabel" name="labelNominalBiasStep">
+              <widget class="QLabel" name="label_NominalBiasStep">
                <property name="text">
                 <string>Nominal Bias Step:</string>
                </property>
@@ -491,11 +509,14 @@ border: 3px solid #333;
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias step value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
+               <property name="prefix">
+                <string notr="true"/>
+               </property>
                <property name="suffix">
                 <string> (V)</string>
                </property>
                <property name="minimum">
-                <double>-1.000000000000000</double>
+                <double>0.010000000000000</double>
                </property>
                <property name="maximum">
                 <double>1.000000000000000</double>
@@ -506,7 +527,7 @@ border: 3px solid #333;
               </widget>
              </item>
              <item row="5" column="0">
-              <widget class="QLabel" name="labelNominalBiasStop">
+              <widget class="QLabel" name="label_NominalBiasStop">
                <property name="text">
                 <string>Nominal Bias Stop:</string>
                </property>
@@ -519,6 +540,9 @@ border: 3px solid #333;
               <widget class="QDoubleSpinBox" name="doubleSpinBox_NominalBiasStop">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The nominal bias stop value in V.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="prefix">
+                <string notr="true"/>
                </property>
                <property name="suffix">
                 <string> (V)</string>
@@ -635,7 +659,7 @@ border: 3px solid #333;
             </spacer>
            </item>
            <item>
-            <widget class="QLabel" name="labelProgress">
+            <widget class="QLabel" name="label_Progress">
              <property name="text">
               <string>Point</string>
              </property>
@@ -707,9 +731,29 @@ border: 3px solid #333;
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_start">
       <item>
+       <widget class="QLabel" name="label_FileTag">
+        <property name="text">
+         <string>File Tag:</string>
+        </property>
+        <property name="buddy">
+         <cstring>lineEdit_FileTag</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_FileTag">
+        <property name="inputMask">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_Storge">
         <property name="text">
          <string>Save Folder</string>
+        </property>
+        <property name="buddy">
+         <cstring>plainTextEdit_SaveFolder</cstring>
         </property>
        </widget>
       </item>
@@ -822,6 +866,7 @@ font-weight: bold;</string>
      <string>&amp;File</string>
     </property>
     <addaction name="action_Load_Acquisition_Settings"/>
+    <addaction name="actionS_ave_Acquisition_Settings"/>
     <addaction name="actionSelect_Save_F_older"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
@@ -867,8 +912,8 @@ font-weight: bold;</string>
     <bool>false</bool>
    </attribute>
    <addaction name="action_Load_Acquisition_Settings"/>
+   <addaction name="actionS_ave_Acquisition_Settings"/>
    <addaction name="actionSelect_Save_F_older"/>
-   <addaction name="action_Connect_Devices"/>
    <addaction name="actionTest"/>
    <addaction name="actionStart"/>
    <addaction name="actionSto_p"/>
@@ -961,22 +1006,33 @@ font-weight: bold;</string>
     <string>Select Save &amp;Folder</string>
    </property>
   </action>
+  <action name="actionS_ave_Acquisition_Settings">
+   <property name="icon">
+    <iconset resource="dlcp_images.qrc">
+     <normaloff>:/icons/images/floppy-diskette-with-pen.png</normaloff>:/icons/images/floppy-diskette-with-pen.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save Acquisition Settings</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>pushButton_Power</tabstop>
-  <tabstop>doubleSpinBoxOscLevelStart</tabstop>
+  <tabstop>lineEdit_Frequency</tabstop>
+  <tabstop>comboBox_IntegrationTime</tabstop>
+  <tabstop>comboBox_NumberOfAverages</tabstop>
+  <tabstop>spinBox_Delay</tabstop>
+  <tabstop>doubleSpinBox_OscLevelStart</tabstop>
   <tabstop>doubleSpinBox_OscLevelStep</tabstop>
   <tabstop>doubleSpinBox_OscLevelStop</tabstop>
   <tabstop>doubleSpinBox_NominalBiasStart</tabstop>
   <tabstop>doubleSpinBox_NominalBiasStep</tabstop>
   <tabstop>doubleSpinBox_NominalBiasStop</tabstop>
-  <tabstop>lineEditFrequency</tabstop>
-  <tabstop>comboBoxIntegrationTime</tabstop>
-  <tabstop>comboBoxNumberOfAverages</tabstop>
-  <tabstop>spinBoxDelay</tabstop>
+  <tabstop>lineEdit_FileTag</tabstop>
   <tabstop>pushButton_ChangeDir</tabstop>
-  <tabstop>pushButton_StartMeasurement</tabstop>
+  <tabstop>plainTextEdit_SaveFolder</tabstop>
   <tabstop>lineEditProgress</tabstop>
+  <tabstop>pushButton_StartMeasurement</tabstop>
   <tabstop>pushButton_AbortMeasurement</tabstop>
  </tabstops>
  <resources>

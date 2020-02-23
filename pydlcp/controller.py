@@ -3,6 +3,7 @@ import configparser
 import json
 from datetime import datetime
 import os
+import re
 import logging
 import pyvisa
 from pydlcp import arduino_board, hotplate, errors, impedance_analyzer as ia, DLCPDataStore as dh5, bts
@@ -30,11 +31,12 @@ class Controller:
 
     """
     _dataPath: str = None
-    _deviceName: str = None
     _dlcpDataStore: dh5.DLCPDataStore = None
     _dlcpParams: dict = None
+    _fileTag: str = None
     _hotPlates: hp_list = []
     _impedanceAnalyzer: ia.ImpedanceAnalyzer = None
+    abort: bool = False
     _loggingLevels = {'NOTSET': logging.NOTSET,
                       'DEBUG': logging.DEBUG,
                       'INFO': logging.INFO,
@@ -44,14 +46,19 @@ class Controller:
     _mainLogger: logging.Logger = None
     _measurementConfig: configparser.ConfigParser = None
 
-    def __init__(self, config_file_url: str, **kwargs):
-        if not isinstance(config_file_url, str):
+    def __init__(self, config_file_url: str = None, **kwargs):
+        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp')
+        if config_file_url is None:
+            config_file_url = os.path.join(cwd, 'dlcp_hardware_config.ini')
+        elif not isinstance(config_file_url, str):
             raise TypeError('The first argument should be an instance of str.')
         self.debug: bool = kwargs.get('debug', False)
+        default_sys_required_options_json = os.path.join(cwd, 'dlcp_system_config_required_options.json')
+        default_dlcp_meas_required_json = os.path.join(cwd, 'dlcp_measurement_config_required_options.json')
         system_option_requirements_json = kwargs.get('dlcp_system_option_requirements_json',
-                                                     'dlcp_system_config_required_options.json')
+                                                     default_sys_required_options_json)
         measurement_option_requirements_json = kwargs.get('dlcp_measurement_options_requirements_json',
-                                                          'dlcp_measurement_config_required_options.json')
+                                                          default_dlcp_meas_required_json)
 
         # Load validation rules for the system configuration file
         self._configSystemRequiredOptions = self._read_json_file(system_option_requirements_json)
@@ -70,6 +77,25 @@ class Controller:
         self._availableResources = self._resourceManager.list_resources()
 
     def load_test_config(self, config: configparser.ConfigParser):
+        """
+        Load the acquisition settings. Follows
+
+        1. Loads the configuration object
+        2. Validates the configuration settings using the rules provided by the constructor (default rules are in
+        ./dlcp_system_config_required_options.json).
+        3. If valid, creates the data structure for the measurement.
+        4. Creates a data storage object that will ouput the data to an h5 file.
+
+        Parameters
+        ----------
+        config: configparser.ConfigParser
+            The configuration settings as read from the ini file specified on the constructor
+
+        Raises
+        ------
+        TypeError:
+            If the config argument is not an instance of configparser.ConfigParser
+        """
         if not isinstance(config, configparser.ConfigParser):
             raise TypeError('The argument should be an instance of configparser.ConfigParser.')
         if self.debug:
@@ -82,32 +108,43 @@ class Controller:
             # iso_date = now.astimezone().isoformat()
 
             self._dlcpParams = dict(config.items('dlcp'))
-            self._deviceName = config.get(section='general', option='device_name')
+            self._fileTag = config.get(section='general', option='file_tag')
 
             base_path: str = config.get(section='general', option='base_path')
             if platform.system() == 'Windows':
-                base_path = '\\\\?\\' + base_path
-            if os.path.exists(base_path):
-                i = 0
-                while os.path.exists("{0}_{1:d}".format(base_path, i)):
-                    i += 1
-                base_path = base_path + '_{0:d}'.format(i)
+                base_path = r'\\?\\' + base_path
 
-            if self.debug:
-                self._print('Creating base path at {0}'.format(base_path))  # No logger yet...
-            self._create_path(base_path)
-            self._dataPath = base_path
+            base_path = self._create_path(base_path)
             # Create main logger
             self._mainLogger = self._create_logger(base_path, name='Main Logger', level='CRITICAL', console=True)
+
+            if self.debug:
+                self._print('Created base path at {0}'.format(base_path))  # No logger yet...
+
+            self._dataPath = base_path
+
             self._print('Loaded acquisition parameters successfully.', level='INFO')
-            h5_name = os.path.join(self._dataPath, '{0}_{1}.h5'.format(self._deviceName, time_stamp))
+            h5_name = os.path.join(self._dataPath, '{0}_{1}.h5'.format(self._fileTag, time_stamp))
             ds: DLCPDataStore = dh5.DLCPDataStore(file_path=h5_name)
             metadata = self._dlcpParams
-            metadata['device_id'] = self._deviceName
+            metadata['file_tag'] = self._fileTag
             ds.metadata(metadata=metadata, group="/dlcp")
             self._dlcpDataStore = ds
 
-    def start_dlcp(self):
+    def start_dlcp(self) -> int:
+        """
+        Starts the DLCP acquisition.
+
+        1. Loads the acquisition parameters from the _dlcpParams class property.
+        2. Iterates over all the nominal biases
+        3. Saves the data on the _dlcpDataStore
+
+        Returns
+        -------
+        int:
+            0 if the measurement was interrupted
+            1 if it was successful.
+        """
         ds = self._dlcpDataStore
         dlcp_params = self._dlcpParams
         nb_start = float(dlcp_params['nominal_bias_start'])
@@ -119,6 +156,7 @@ class Controller:
         freq = float(dlcp_params['frequency'])
         integration_time = dlcp_params['integration_time']
         noa = int(dlcp_params['number_of_averages'])
+        # Iterate from nominal bias start to nominal bias stop
         nb_scan = np.arange(start=nb_start, stop=nb_stop+nb_step, step=nb_step)
         for i, nb in enumerate(nb_scan):
             data = self._impedanceAnalyzer.dlcp_sweep(nominal_bias=nb, osc_start=osc_level_start,
@@ -126,9 +164,29 @@ class Controller:
                                                       frequency=freq, integration_time=integration_time,
                                                       noa=noa)
             ds.save_dlcp(dlcp_data=data, nominal_bias=nb)
+            if self.abort:
+                self.abort = False
+                return 0
+        return 1
 
     def cv_sweep(self, voltage_start: float, voltage_step: float, voltage_stop: float, frequency: float,
                  **kwargs):
+        """
+        Runs a capacitance-voltage sweep and saves it to the h5 data store.
+
+        Parameters
+        ----------
+        voltage_start: float
+            The start DC bias (V)
+        voltage_step: float
+            The step DC bias (V)
+        voltage_stop: float
+            The stop DC bias (V)
+        frequency: float
+            The AC frequency
+        kwargs:
+            keyword arguments passed to `impedance_analyzer.cv_sweep' method.
+        """
         data = self._impedanceAnalyzer.cv_sweep(voltage_start=voltage_start,
                                                 voltage_step=voltage_step,
                                                 voltage_stop=voltage_stop,
@@ -146,8 +204,21 @@ class Controller:
 
         self._dlcpDataStore.metadata(metadata=sweep_params, group='/cv')
 
-    @staticmethod
-    def _validate_config(config: configparser.ConfigParser, required_options) -> bool:
+    def _validate_config(self, config: configparser.ConfigParser, required_options: dict) -> bool:
+        """
+        Validate the configuration based on an agreed set of rules
+
+        Parameters
+        ----------
+        config: configparser.ConfigParser
+            The configuration parsed from an .ini file
+        required_options: dict
+            A dictionary with the rules
+        Returns
+        -------
+        bool
+            True if the configuration meets the rules defined in required options. False otherwise
+        """
         if not isinstance(config, configparser.ConfigParser):
             raise TypeError('The configuration argument must be an instance of configparser.ConfigParser.')
         for section in required_options:
@@ -155,18 +226,40 @@ class Controller:
                 for o in required_options[section]:
                     if not config.has_option(section, o):
                         msg = 'Config file must have option \'{0}\' for section \'{1}\''.format(o, section)
-                        raise errors.DLCPSystemConfigError(message=msg)
+                        self._print(msg=msg, level="ERROR")
+                        raise errors.ConfigurationError(message=msg)
             else:
                 msg = "Config file must have section '{0}'.".format(section)
-                raise errors.DLCPSystemConfigError(message=msg)
+                raise errors.ConfigurationError(message=msg)
         return True
 
     def resource_available(self, resource_address: str):
+        """
+        Checks if the specified resource is available through the pyvisa connection
+
+        Parameters
+        ----------
+        resource_address: str
+            The address of the resource
+
+        Returns
+        -------
+        bool
+            True if the resource exists in the list of available resources, false otherwise.
+        """
         if resource_address not in self._availableResources:
             return False
         return True
 
     def init_impedance_analyzer(self):
+        """
+        Tries to create the impedance analyzer pyvisa object and open the connection to it.
+
+        Raises
+        ------
+        errors.InstrumentError:
+            If the address to the pyvisa resource for the impedance analyzer is not available.
+        """
         address = self._systemConfig.get(section='impedance_analyzer', option='address')
         name = self._systemConfig.get(section='impedance_analyzer', option='name')
         if not self.resource_available(resource_address=address):
@@ -174,29 +267,87 @@ class Controller:
             raise errors.InstrumentError(address=address, resource_name=name, message=msg)
 
         self._impedanceAnalyzer = ia.ImpedanceAnalyzer(address=address, resource_manager=self._resourceManager)
-        self._impedanceAnalyzer.connect()
 
     @staticmethod
     def _read_json_file(filename: str):
+        """
+        Reads the json file containing the rules to validate the configuration.
+
+        Parameters
+        ----------
+        filename: str
+            The full name to the json file containing the validation rules.
+
+        Returns
+        -------
+        json:
+            The json data in the file
+        """
         file = open(filename, 'r')
         json_data = json.load(file)
         file.close()
         return json_data
 
-    @staticmethod
-    def _create_path(path: str):
+    def _create_path(self, path: str, overwrite: bool = True):
+        """
+        Creates a folder in the selected path. If the folder exists and the overwrite flag is set to False, it appends
+        a consecutive number to the path.
+
+        Parameters
+        ----------
+        path: str
+            The path to be created (if it does not exist)
+        overwrite: bool
+            If set to true and the folder exists, it will not try to create a folder. Otherwise, it will append a
+            consecutive integer to te path and try to create it.
+
+        Returns
+        -------
+        str:
+            The newly created path
+        """
         if not os.path.exists(path):
             os.makedirs(path)
+            return path
+        elif not overwrite:
+            relative_name = os.path.basename(path)
+            parent_dir = os.path.dirname(path)
+            p = re.compile(r'{0}\d*'.format(relative_name))
+            paths = [f for f in os.listdir(parent_dir) if p.match(f)]
+            n_paths = len(paths)
+            new_path = '{0}_{1:d}'.format(path,n_paths)
+            self._create_path(path=new_path, overwrite=True)
+            return new_path
+        else:
+            return path
 
     @staticmethod
     def _create_logger(path: str, name: str = 'experiment_logger',
                        level: [str, int] = 'DEBUG', console: bool = False) -> logging.Logger:
+        """
+        Creates an instance of logging.Logger saving the logs to the specified file.
+
+        Parameters
+        ----------
+        path: str
+            The folder to store the log file in
+        name:str
+            The name to identify the logger. Default: 'experiment_logger'.
+        level:str
+            The threshold level for the logs (default 'DEBUG')
+        console: bool
+            True if allowing output to the console as well.
+
+        Returns
+        -------
+        logging.Logger:
+            The logger instance
+
+        """
         experiment_logger = logging.getLogger(name)
         experiment_logger.setLevel(level)
         filename = 'progress.log'
         log_file = os.path.join(path, filename)
-        if platform.system() == 'Windows':
-            log_file = "\\?\\" + log_file
         # create file handler which logs even critical messages
         fh = logging.FileHandler(log_file)
         fh.setLevel(level=level)
@@ -214,7 +365,46 @@ class Controller:
 
         return experiment_logger
 
+    @property
+    def impedance_analyzer_address(self) -> str:
+        address = self._systemConfig.get(section='impedance_analyzer', option='address')
+        return address
+
+    @property
+    def impedance_analyzer_resource_name(self) -> str:
+        name = self._systemConfig.get(section='impedance_analyzer', option='name')
+        return name
+
+    def connect_devices(self):
+        if self._impedanceAnalyzer is not None:
+            self._impedanceAnalyzer.connect()
+        else:
+            msg = 'Error connecting to the impedance analyzer.'
+            raise errors.InstrumentError(address=self.impedance_analyzer_address,
+                                         resource_name=self.impedance_analyzer_resource_name,
+                                         msg=msg)
+
+    def disconnect_devices(self):
+        if self._impedanceAnalyzer is not None:
+            self._impedanceAnalyzer.disconnect()
+
+    def __del__(self):
+        try:
+            self.disconnect_devices()
+        except Exception as e:
+            self._print(msg='Error disconnecting devices.', level='ERROR')
+
     def _print(self, msg: str, level="DEBUG"):
+        """
+        Handles the output messages for the class
+
+        Parameters
+        ----------
+        msg: str
+            The message to be output
+        level: str
+            The level of the message (DEBUG, INFO, ERROR, CRITICAL). Only used if a logger has been specified.
+        """
         level_no = self._loggingLevels[level]
         if self._mainLogger is None:
             print(msg)

@@ -179,5 +179,9 @@ class VisaInstrument:
         elif isinstance(self._logger, logging.Logger):
             self._logger.log(level_no, msg)
 
+    @property
+    def address(self) -> str:
+        return self._resourceAddress
+
     def __del__(self):
         self.disconnect()

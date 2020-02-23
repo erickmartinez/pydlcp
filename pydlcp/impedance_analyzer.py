@@ -79,8 +79,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         super().__init__(address, 'HP4194A', resource_manager)
         self._debug = debug
 
-    def cv_sweep(self,
-                 ) -> np.ndarray:
+    def cv_sweep(self, voltage_start: float, voltage_step: float, voltage_stop: float, frequency: float,
+                 **kwargs) -> np.ndarray:
         """
         Parameters
         ---------

@@ -2,16 +2,17 @@
   "dlcp" : [
     "integration_time",
     "number_of_averages",
-    "amplitude_start",
-    "amplitude_step",
-    "amplitude_stop",
+    "osc_level_start",
+    "osc_level_step",
+    "osc_level_stop",
     "frequency",
     "nominal_bias_start",
     "nominal_bias_stop",
-    "nominal_bias_step"
+    "nominal_bias_step",
+    "delay"
   ],
   "general": [
     "base_path",
-    "device_name"
+    "file_tag"
   ]
 }
