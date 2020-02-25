@@ -189,19 +189,19 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         program += "'70 NOA={1}',"  # Number of Averages
         program += "'80 OSC={2:.4f};FREQ={3:.3E};BIAS={4:.4f}',"  # AC Amplitude (V), Frequency (Hz) & Bias (V)
         program += "'90 START={4:.3f};STOP={4:.3f}',"
-        program += "'100 MANUAL={4:.4f}; NOP=20',"
-        program += "'110 DTIME=0',"  # Delay time set to 0
+        program += "'100 MANUAL={4:.4f}; NOP=2',"
+        program += "'110 DTIME=100',"  # Delay time set to 100 ms
         program += "'120 SHT1',"  # Short Calibration set to On
         program += "'130 OPN1',"  # Open Calibration set to On
         program += "'140 AUTO',"  # Auto-Scale A & B
         program += "'150 CPYM2',"  # Copy Data Mode 2
         program += "'160 SWTRG',"  # Single Trigger Run
         program += "'170 COPY',"  # Copy Data to Instrument
-        program += "'180 DCOFF',"  # Attempt to turn off DC Bias (Doesn't work)
+        program += "'180 DCOFF',"  # Attempt to turn off DC Bias
         program += "'190 END'"
         return program
 
-    def dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,
+    def dlcp_sweep(self, nominal_bias: float, osc_start: float, osc_step: float, osc_stop: float,
                    frequency: float, **kwargs) -> np.ndarray:
         """
         Performs a DLCP sweep
@@ -210,11 +210,11 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         ----------
         nominal_bias: float
             The nominal bias for the DLCP sweep
-        start_amplitude: float
+        osc_start: float
             The starting amplitude for the oscillator level sweep (V)
-        step_amplitude: float
+        osc_step: float
             The step size for the amplitude of the oscillator level sweep (V)
-        stop_amplitude: float
+        osc_stop: float
             The stop value for the oscillator level sweep (V)
         frequency: float
             The oscillator frequency (Hz)
@@ -250,7 +250,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         if number_of_averages not in self._noa:
             raise ValueError('Invalid number of averages.')
 
-        ac_levels = np.arange(start_amplitude, stop_amplitude + step_amplitude, step_amplitude)
+        ac_levels = np.arange(osc_start, osc_stop + osc_step, osc_step)
         n_levels = len(ac_levels)
         dc_bias = nominal_bias - 0.5*ac_levels
         results = np.empty(n_levels, dtype=dlcp_type)

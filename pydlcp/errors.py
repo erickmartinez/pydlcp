@@ -93,7 +93,7 @@ class ConfigurationError(Error):
         return self._message
 
 
-class SystemConfigError(ConfigurationError):
+class BTSSystemConfigError(ConfigurationError):
     """
     A Class representing a System Configuration Error
 
@@ -118,6 +118,25 @@ class SystemConfigError(ConfigurationError):
     def test_units(self) -> int:
         return self._testUnits
 
+class DLCPSystemConfigError(ConfigurationError):
+    """
+    A Class representing a System Configuration Error
+
+    Attributes
+    ----------
+    _testUnits: int
+        The number of test units in the system
+    """
+    def __init__(self, message: str):
+        """
+        Parameters
+        ----------
+        message: str
+            The explanation of the error
+        test_units: int
+            The number of test units in the system
+        """
+        super().__init__(message=message)
 
 class ArduinoError(InstrumentError):
     """

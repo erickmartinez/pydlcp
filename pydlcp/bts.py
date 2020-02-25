@@ -259,7 +259,7 @@ class BTS:
     def interval_progress(self) -> int:
         return self._intervalProgress
 
-    def append_device(self, device: str, pin: int, h5_storage: datastorage.H5Store, clean: bool = True):
+    def append_device(self, device: str, pin: int, h5_storage: datastorage.BTSH5Store, clean: bool = True):
         """
         Adds a device to the BTS experiment
 
@@ -269,7 +269,7 @@ class BTS:
             The device id
         pin: int
             The pin in the test unit, to which the device is attached.
-        h5_storage: datastorage.H5Store
+        h5_storage: datastorage.BTSH5Store
             The h5Store on which the data is saved.
         clean: bool
             True if the device does not contain sodium, false otherwise.
@@ -303,7 +303,7 @@ class BTS:
     def accumulated_stress_time(self) -> float:
         return self._accumulatedStressTime
 
-    def get_device_storage(self, device: str, clean: bool = True) -> datastorage.H5Store:
+    def get_device_storage(self, device: str, clean: bool = True) -> datastorage.BTSH5Store:
         """
         Returns the H5 Datastore to the selected device
 
@@ -316,7 +316,7 @@ class BTS:
 
         Returns
         -------
-        datastorage.H5Store
+        datastorage.BTSH5Store
             The H5 Datastore to the selcted device
         """
         if clean:

@@ -2,16 +2,17 @@ import numpy as np
 import configparser
 import json
 from datetime import datetime
-from datetime import timedelta
 import os
+import re
 import logging
 import pyvisa
-from pydlcp import arduino_board, hotplate, errors, keithley, impedance_analyzer as ia, datastorage, bts
-from apscheduler.schedulers.background import BackgroundScheduler
+from pydlcp import arduino_board, hotplate, errors, impedance_analyzer as ia, DLCPDataStore as dh5, bts
 import platform
 from typing import List
 
 # Different data type definitions
+from pydlcp.DLCPDataStore import DLCPDataStore
+
 ard_list = List[arduino_board.ArduinoBoard]
 bts_list = List[bts.BTS]
 hp_list = List[hotplate.Hotplate]
@@ -26,94 +27,16 @@ dlcp_type = np.dtype([('osc_level', 'd'),
 
 class Controller:
     """
-    This class provides methods to control a BTS and DLCP experiment interacting with different instruments and saving
-    to a h5 data store.
+    This class provides methods to control a DLCP experiment and save the results to a h5 data store.
 
-    Attributes
-    ----------
-    _activeCVUnit: List[str]
-        The unit that the impedance analyzer is currently locked to.
-    _arduinos:
-        A list with handles to different ArduinoBoard instances controlling the different test units.
-    _availableResources: List[str]
-        A list of available pyvisa resources. Used to verify that the resource given by the constructor is available.
-    _btsAcquisitions: bts_list
-        A list with the different BTS instances representing a different experimental BTS condition.
-    _cvSweepParams: dict
-        A dictionary with the CV sweep acquisition parameters
-    _data_paths: List[str]
-        A list containing the paths where the output data a logs will be saved
-    debug: bool
-        True if we want to execute in debugging mode
-    _configMeasurementRequiredOptions: dict
-        A dictionary containing rules for validating the acquisition parameters and settings
-    _configSystemRequiredOptions: dict
-        A dictionary containing rules for validating the system configuration if it is not in its default state
-    _dlcpParams: dict
-        A dictionary with the DLCP acquisition parameters
-    _finishedUnits: List[int]
-        A list with the number ids of the units that completed the BTS measurement
-    _hotPlates: hp_list
-        A list containing instances of the hotplates that control the temperature on each test unit
-    _impedanceAnalyzer: ia.ImpedanceAnalyzer
-        An instance to the impedance analyzer object
-    _keithley: keithley.Keithley
-        An instance to the keithley source-meter object
-    _loggingLevels: dict
-        A map of logging level strings to integers, as defined in the logging module
-    _mainLogger: logging.Logger
-        The logger to the class, used to handle any messages within the class.
-    _measurementConfig: config.ConfigParser
-        An instance of ConfigParser that contains all the acquisition parameters
-    _physicalTestUnits: int
-        The number of hardware units available for use.
-    _resourceManager:pyvisa.highlevel.ResourceManager
-        An instance of pyvisa's resource manager to instantiate the instruments from.
-    _scheduler: BackgroundScheduler
-        An instance of the BackgroundScheduler
-    _schedulerRunning: bool
-        True if the scheduler is running, false otherwise
-    _testUnits: int
-        The number of test units configured to use in the BTS measurement
-
-    Methods
-    -------
-    ramp_up(self, test_unit: int):
-        Set's the hotplate temperature to the stress temperature. And sets the BTS flag to 'heating_up'. If the unit's
-        fan is currently on, turns it off.
-
-    ramp_down(self, test_unit: int):
-        Set the hotplate temperature to 25 °C and turns the unit's fan on if it is off. Sets the BTS flag to
-        'cooling_down'. Disconnects all the pins in the test unit.
-
-    start_temperature_log(self, test_unit: int):
-        Starts the temperature log. Instructs the scheduler to call the method '_log_temperature' according to the
-        configured setting. Starts the class scheduler if it is not already running. Sets the '_schedulerRunning' to
-        True.
-
-    start_bts(self, test_unit: int):
-        Starts the bias-temperature stress. This method should be called once the test unit has reached the stress
-        temperature. It turn's on the voltage (connects all pins on the unit to the voltage source and turns the source
-        on if it is not on already). Set the BTS flag to 'running_stress'. Instructs the scheduler to call the method
-        'stop_bts' at time 1 stress_interval unit time later than the current time.
-
-    stop_bts(self, test_unit: int):
-        Calls 'ramp_down' method.
-
-    _log_temperature(self, test_unit: int):
-        Measures the temperature and leakage current through all the devices connected in parallel to the keithley
-        source meter and saves the log to each of the device's datastores.
     """
-    _activeCVUnit = []
-    _arduinos: ard_list = []
-    _btsAcquisitions: bts_list = []
-    _cvSweepParams: dict = None
-    _data_paths: List[str] = []
+    _dataPath: str = None
+    _dlcpDataStore: dh5.DLCPDataStore = None
     _dlcpParams: dict = None
-    _finishedUnits: List[int] = []
+    _fileTag: str = None
     _hotPlates: hp_list = []
     _impedanceAnalyzer: ia.ImpedanceAnalyzer = None
-    _keithley: keithley.Keithley = None
+    abort: bool = False
     _loggingLevels = {'NOTSET': logging.NOTSET,
                       'DEBUG': logging.DEBUG,
                       'INFO': logging.INFO,
@@ -122,17 +45,20 @@ class Controller:
                       'CRITICAL': logging.CRITICAL}
     _mainLogger: logging.Logger = None
     _measurementConfig: configparser.ConfigParser = None
-    _schedulerRunning = False
-    _testUnits: int = 0
 
-    def __init__(self, config_file_url: str, **kwargs):
-        if not isinstance(config_file_url, str):
+    def __init__(self, config_file_url: str = None, **kwargs):
+        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp')
+        if config_file_url is None:
+            config_file_url = os.path.join(cwd, 'dlcp_hardware_config.ini')
+        elif not isinstance(config_file_url, str):
             raise TypeError('The first argument should be an instance of str.')
         self.debug: bool = kwargs.get('debug', False)
-        system_option_requirements_json = kwargs.get('system_option_requirements_json',
-                                                     'system_config_required_options.json')
-        measurement_option_requirements_json = kwargs.get('measurement_options_requirements_json',
-                                                          'measurement_config_required_options.json')
+        default_sys_required_options_json = os.path.join(cwd, 'dlcp_system_config_required_options.json')
+        default_dlcp_meas_required_json = os.path.join(cwd, 'dlcp_measurement_config_required_options.json')
+        system_option_requirements_json = kwargs.get('dlcp_system_option_requirements_json',
+                                                     default_sys_required_options_json)
+        measurement_option_requirements_json = kwargs.get('dlcp_measurement_options_requirements_json',
+                                                          default_dlcp_meas_required_json)
 
         # Load validation rules for the system configuration file
         self._configSystemRequiredOptions = self._read_json_file(system_option_requirements_json)
@@ -143,413 +69,197 @@ class Controller:
         config = configparser.ConfigParser()
         config.read(config_file_url)
 
-        self._physicalTestUnits = config.getint(section='global', option='test_units')
-
         # If the system configuration file is valid, then store it in the object
         if self._validate_config(config, self._configSystemRequiredOptions):
             self._systemConfig = config
 
         self._resourceManager: pyvisa.highlevel.ResourceManager = pyvisa.highlevel.ResourceManager()
         self._availableResources = self._resourceManager.list_resources()
-        self._scheduler: BackgroundScheduler = BackgroundScheduler()
-
-    def ramp_up(self, test_unit: int):
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        hp: hotplate.Hotplate = self._hotPlates[test_unit]
-        hp.set_temperature(int(bts_acquisition.temperature))
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        if a.fan_status:
-            a.fan_off()
-        a.disconnect_all_pins()
-        bts_acquisition.status = 'heating_up'
-
-    def ramp_down(self, test_unit: int):
-        hp: hotplate.Hotplate = self._hotPlates[test_unit]
-        hp.set_temperature(25)
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        if not a.fan_status:
-            a.fan_on()
-        a.disconnect_all_pins()
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        bts_acquisition.status = 'cooling_down'
-
-    def start_temperature_log(self, test_unit: int):
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        self._scheduler.add_job(func=self._log_temperature, trigger='interval', args=[test_unit],
-                                seconds=bts_acquisition.temperature_sampling_interval,
-                                id='temperature_log_unit{0}'.format(test_unit))
-        if not self._schedulerRunning:
-            self._scheduler.start()
-            self._schedulerRunning = True
-
-    def start_bts(self, test_unit: int):
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        a.connect_all_pins()
-        a.connect_keithley()
-        # If the voltage source is off, turn it on
-        if not self._keithley.source_on:
-            self._keithley.turn_source_on()
-        now: datetime = datetime.now()
-        later = now + timedelta(seconds=bts_acquisition.stress_interval)
-        self._scheduler.add_job(func=self.stop_bts, trigger='date', args=[test_unit],
-                                date=later, id='bts_unit{0}'.format(test_unit))
-        bts_acquisition.status = 'running_stress'
-        bts_acquisition.start_bts_interval = now
-        if not self._schedulerRunning:
-            self._scheduler.start()
-            self._schedulerRunning = True
-
-    def stop_bts(self, test_unit: int):
-        # Maybe we need to do something else here, else change all method calls to just, ramp_down.
-        self.ramp_down(test_unit=test_unit)
-
-    def _log_temperature(self, test_unit: int):
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        now = datetime.now()
-        temperature = a.temperature
-        current = self._keithley.current
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        clean_devices = bts_acquisition.clean_devices
-        contaminated_devices = bts_acquisition.contaminated_devices
-        dt = bts_acquisition.time_delta_total(current_datetime=now)
-        for device in clean_devices:
-            h5_storage: datastorage.H5Store = bts_acquisition.get_device_storage(device=device, clean=True)
-            h5_storage.log_temperature_current(time=dt,
-                                               temperature=temperature,
-                                               current=current)
-
-        for device in contaminated_devices:
-            h5_storage: datastorage.H5Store = bts_acquisition.get_device_storage(device=device, clean=False)
-            h5_storage.log_temperature_current(time=dt,
-                                               temperature=temperature,
-                                               current=current)
-
-    def start_measurement(self):
-        now = datetime.now()
-        for test_unit in range(self._testUnits):
-            self._log_cv_sweep(test_unit=test_unit)
-            status_job_id = 'check_status{0}'.format(test_unit)
-            self._scheduler.add_job(func=self._check_status, trigger='interval', args=[test_unit], id=status_job_id,
-                                    seconds=10)
-            self.start_temperature_log(test_unit=test_unit)
-
-        if not self._schedulerRunning:
-            self._scheduler.start()
-            self._schedulerRunning = True
-
-    def _check_status(self, test_unit: int):
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        now = datetime.now()
-        temperature = a.temperature
-        # If the device temperature equals the target temperature and the status is ramping up, start stress
-        if np.isclose(a.temperature, bts_acquisition.temperature,
-                      atol=2) and bts_acquisition.status == 'heating_up':
-            self.start_bts(test_unit=test_unit)
-        elif a.temperature <= 26 and bts_acquisition.status == 'cooling_down':
-            dt = bts_acquisition.time_delta_bts(current_datetime=datetime.now())
-            bts_acquisition.accumulate_interval(dt=dt)
-            bts_acquisition.status = "idle"
-            self._log_cv_sweep(test_unit=test_unit)
-        elif bts_acquisition.status == 'finished':
-            self._unit_finished(test_unit=test_unit)
-
-    def _unit_finished(self, test_unit: int):
-        a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-        if (a.temperature > 30) and (not a.fan_status):
-            a.fan_on()
-        elif a.fan_status:
-            a.fan_off()
-
-        # Stop logging temperature
-        self._scheduler.remove_job(job_id='temperature_log_unit{0}'.format(test_unit))
-        status_job_id = 'check_status{0}'.format(test_unit)
-        # Stop checking if the unit is ready
-        self._scheduler.remove_job(job_id=status_job_id)
-        if test_unit not in self._finishedUnits:
-            self._finishedUnits.append(test_unit)
-        if len(self._finishedUnits) == self._testUnits:
-            self._scheduler.shutdown()
-            self._schedulerRunning = False
-
-    def _log_cv_sweep(self, test_unit: int):
-        # Make sure the board is idle
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        # If the current callback is in a scheduler queue, remove the job from the scheduler
-        job_id = 'bts_cv_test_unit{0}'.format(test_unit)
-        if job_id in self._scheduler.get_jobs():
-            self._scheduler.remove_job(job_id=job_id)
-        # Check if the measurement is not finished
-        if bts_acquisition.status == "idle":
-            # If the impedance analyzer is busy, schedule this measurement for later
-            if len(self._activeCVUnit) > 0 or self._impedanceAnalyzer.status == "running":
-                next_date = datetime.now() + timedelta(seconds=self._impedanceAnalyzer.wait_time)
-                self._scheduler.add_job(self._log_cv_sweep(test_unit=test_unit),
-                                        trigger='date', run_date=next_date,
-                                        args=[test_unit], id=job_id)
-            else:
-                bts_acquisition.status = "running_cv"
-                # Lock the Impedance Analyzer measurement to the test_unit
-                self._activeCVUnit.append(test_unit)
-                # Get the arduino for the selected board
-                a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-                if a.keithley_connected:
-                    a.disconnect_keithley()
-                if a.fan_status:  # If fan is on
-                    a.fan_off()
-                # Make sure no other pins are connected to the impedance analyzer
-                for i in range(self._testUnits):
-                    ai: arduino_board.ArduinoBoard = self._arduinos[i]
-                    b: bts.BTS = self._btsAcquisitions[i]
-                    if b.status != 'running_stress':
-                        ai.disconnect_all_pins()
-                # loop over all clean pins
-                for d, p in zip(bts_acquisition.clean_devices, bts_acquisition.clean_pins):
-                    # turn the pin on
-                    a.pin_on(pin_number=p)
-                    # collect the data from the impedance analyzer
-                    data: vcr_type = self._impedanceAnalyzer.cv_sweep(
-                        voltage_start=float(self._cvSweepParams['voltage_start']),
-                        voltage_step=float(self._cvSweepParams['voltage_step']),
-                        voltage_stop=float(self._cvSweepParams['voltage_stop']),
-                        frequency=float(self._cvSweepParams['frequency']),
-                        integration_time=self._cvSweepParams['integration_time'],
-                        noa=int(self._cvSweepParams['number_of_averages']),
-                        osc_amplitude=float(self._cvSweepParams['osc_amplitude']),
-                        sweep_direction=self._cvSweepParams['sweep_direction']
-                    )
-                    # turn the pin off
-                    a.pin_off(pin_number=p)
-                    # get the storage for the pin
-                    h5_ds = bts_acquisition.get_device_storage(device=d, clean=True)
-                    # append the data to the h5 storage
-                    h5_ds.append_cv(time=bts_acquisition.accumulated_stress_time, cv_data=data)
-                # loop over al contaminated pins
-                for d, p in zip(bts_acquisition.contaminated_devices, bts_acquisition.contaminated_pins):
-                    a.pin_on(pin_number=p)
-                    # collect the data from the impedance analyzer
-                    data: vcr_type = self._impedanceAnalyzer.cv_sweep(
-                        voltage_start=float(self._cvSweepParams['voltage_start']),
-                        voltage_step=float(self._cvSweepParams['voltage_step']),
-                        voltage_stop=float(self._cvSweepParams['voltage_stop']),
-                        frequency=float(self._cvSweepParams['frequency']),
-                        integration_time=self._cvSweepParams['integration_time'],
-                        noa=int(self._cvSweepParams['number_of_averages']),
-                        osc_amplitude=float(self._cvSweepParams['osc_amplitude']),
-                        sweep_direction=self._cvSweepParams['sweep_direction']
-                    )
-                    # turn the pin off
-                    a.pin_off(pin_number=p)
-                    # get the storage for the pin
-                    h5_ds = bts_acquisition.get_device_storage(device=d, clean=False)
-                    # append the data to the h5 storage
-                    h5_ds.append_cv(time=bts_acquisition.accumulated_stress_time, cv_data=data)
-
-                # Unlock the impedance analyzer
-                self._activeCVUnit.remove(test_unit)
-                # Run a DLCP
-                self._log_dlcp(test_unit=test_unit)
-                if bts_acquisition.status != 'finished':
-                    self.ramp_up(test_unit=test_unit)
-                else:
-                    self._unit_finished(test_unit=test_unit)
-
-    def _log_dlcp(self, test_unit: int):
-        # Make sure the board is idle
-        bts_acquisition: bts.BTS = self._btsAcquisitions[test_unit]
-        # If exists remove the job from the scheduler
-        scheduled_jobs = self._scheduler.get_jobs()
-        job_id = 'bts_dlcp_test_unit{0}'.format(test_unit)
-        if job_id in scheduled_jobs:
-            self._scheduler.remove_job(job_id=job_id)
-        # Check if the measurement is not finished
-        if bts_acquisition.status == "idle":
-            # Check if there is something else being measured
-            if len(self._activeCVUnit) > 0 or self._impedanceAnalyzer.status == "running":
-                next_date = datetime.now() + timedelta(seconds=self._impedanceAnalyzer.wait_time)
-                self._scheduler.add_job(self._log_dlcp(test_unit=test_unit),
-                                        trigger='date', run_date=next_date,
-                                        args=[test_unit], id=job_id)
-            else:
-                bts_acquisition.status = "running_dlcp"
-                # Lock the Impedance Analyzer measurement
-                self._activeCVUnit.append(test_unit)
-                # Get the arduino for the selected board
-                a: arduino_board.ArduinoBoard = self._arduinos[test_unit]
-                # Make sure no other pins are connected to the impedance analyzer
-                for i in range(self._testUnits):
-                    ai: arduino_board.ArduinoBoard = self._arduinos[i]
-                    b: bts.BTS = self._btsAcquisitions[i]
-                    if b.status != 'running_stress':
-                        ai.disconnect_all_pins()
-                # Lock the impedance analyzer to this unit
-                self._activeCVUnit.remove(test_unit)
-                # loop over all clean pins
-                for d, p in zip(bts_acquisition.clean_devices, bts_acquisition.clean_pins):
-                    # turn the pin on
-                    a.pin_on(pin_number=p)
-                    # collect the data from the impedance analyzer
-                    data: dlcp_type = self._impedanceAnalyzer.dlcp_sweep(
-                        nominal_bias=float(self._dlcpParams['nominal_bias']),
-                        start_amplitude=float(self._dlcpParams['start_amplitude']),
-                        step_amplitude=float(self._dlcpParams['step_amplitude']),
-                        stop_amplitude=float(self._dlcpParams['stop_amplitude']),
-                        frequency=float(self._cvSweepParams['frequency']),
-                        integration_time=self._cvSweepParams['integration_time'],
-                        noa=int(self._cvSweepParams['number_of_averages']),
-                    )
-                    # turn the pin off
-                    a.pin_off(pin_number=p)
-                    # get the storage for the pin
-                    h5_ds = bts_acquisition.get_device_storage(device=d, clean=True)
-                    # append the data to the h5 storage
-                    h5_ds.append_dlcp(time=bts_acquisition.accumulated_stress_time, dlcp_data=data)
-                # loop over al contaminated pins
-                for d, p in zip(bts_acquisition.contaminated_devices, bts_acquisition.contaminated_pins):
-                    a.pin_on(pin_number=p)
-                    # collect the data from the impedance analyzer
-                    data: dlcp_type = self._impedanceAnalyzer.dlcp_sweep(
-                        nominal_bias=float(self._dlcpParams['nominal_bias']),
-                        start_amplitude=float(self._dlcpParams['start_amplitude']),
-                        step_amplitude=float(self._dlcpParams['step_amplitude']),
-                        stop_amplitude=float(self._dlcpParams['stop_amplitude']),
-                        frequency=float(self._cvSweepParams['frequency']),
-                        integration_time=self._cvSweepParams['integration_time'],
-                        noa=int(self._cvSweepParams['number_of_averages']),
-                    )
-                    # turn the pin off
-                    a.pin_off(pin_number=p)
-                    # get the storage for the pin
-                    h5_ds = bts_acquisition.get_device_storage(device=d, clean=False)
-                    # append the data to the h5 storage
-                    h5_ds.append_dlcp(time=bts_acquisition.accumulated_stress_time, dlcp_data=data)
-                bts_acquisition.status = "idle"
 
     def load_test_config(self, config: configparser.ConfigParser):
+        """
+        Load the acquisition settings. Follows
+
+        1. Loads the configuration object
+        2. Validates the configuration settings using the rules provided by the constructor (default rules are in
+        ./dlcp_system_config_required_options.json).
+        3. If valid, creates the data structure for the measurement.
+        4. Creates a data storage object that will ouput the data to an h5 file.
+
+        Parameters
+        ----------
+        config: configparser.ConfigParser
+            The configuration settings as read from the ini file specified on the constructor
+
+        Raises
+        ------
+        TypeError:
+            If the config argument is not an instance of configparser.ConfigParser
+        """
         if not isinstance(config, configparser.ConfigParser):
             raise TypeError('The argument should be an instance of configparser.ConfigParser.')
         if self.debug:
             self._print('Loading measurement configuration...')  # No logger yet...
 
         if self._validate_config(config, self._configMeasurementRequiredOptions):
-            all_sections = config.sections()
-            test_units = len([u for u in all_sections if 'bts' in u])
-            if test_units > self._physicalTestUnits:
-                msg = 'Measurement requesting {0:d} units. Available units: {1}'.format(test_units,
-                                                                                        self._physicalTestUnits)
-                raise errors.ConfigurationError(message=msg)
-            self._testUnits = test_units
             self._measurementConfig = config
             now = datetime.now()
             time_stamp = now.strftime('%Y%m%d')
+            # iso_date = now.astimezone().isoformat()
 
-            self._cvSweepParams = dict(config.items('cv_sweep'))
             self._dlcpParams = dict(config.items('dlcp'))
+            self._fileTag = config.get(section='general', option='file_tag')
 
-            # Create a directory structure by
-            # +-- Temperature + Applied Electric Field
-            #       +-- Device 1 - Clean
-            #       +-- Device 2 - Clean
-            #       | ...
-            #       +-- Device 7 - Contaminated
-            #       +-- Device 8 - Contaminated
-            root_path: str = config.get(section='general', option='base_path')
+            base_path: str = config.get(section='general', option='base_path')
             if platform.system() == 'Windows':
-                root_path = '\\\\?\\' + root_path
-            base_path = os.path.join(root_path, time_stamp)
-            if self.debug:
-                self._print('Creating base path at {0}'.format(base_path))  # No logger yet...
-            self._create_path(base_path)
+                base_path = r'\\?\\' + base_path
+
+            base_path = self._create_path(base_path)
             # Create main logger
             self._mainLogger = self._create_logger(base_path, name='Main Logger', level='CRITICAL', console=True)
 
-            for i in range(self._testUnits):
-                section_name = 'bts{0}'.format(i)
-                params = self._get_bts_metadata(section_name=section_name)
-                # Create a BTS acquisition object
-                bts_acquisition = bts.BTS(temperature=params['stress_temperature'], bias=params['stress_bias'],
-                                          stress_interval=params['stress_interval'],
-                                          temperature_sampling_interval=params['temperature_sampling_interval'],
-                                          max_time=params['max_stress_time'])
+            if self.debug:
+                self._print('Created base path at {0}'.format(base_path))  # No logger yet...
 
-                data_folder = '{0:.0f}C-{1:.1f}'.format(params['stress_temperature'], params['stress_bias'])
-                relative_path = os.path.join(base_path, data_folder)
-                self._data_paths.append(relative_path)
-                self._create_path(relative_path)
-                # Create separate h5 files for each pin
-                clean_devices = config.get(section=section_name, option='clean_devices').split(',')
-                clean_pins = config.get(section=section_name, option='clean_pins').split(',')
-                contaminated_devices = config.get(section=section_name, option='contaminated_devices').split(',')
-                contaminated_pins = config.get(section=section_name, option='contaminated_pins').split(',')
-                for d, p in zip(clean_devices, clean_pins):
-                    h5_name = os.path.join(relative_path, '{0}_{1}-clean.h5'.format(params['clean_wafer_id'], d))
-                    ds = datastorage.H5Store(h5_name)
-                    metadata = params
-                    metadata['device_id'] = d
-                    ds.metadata(metadata=metadata, group="/bts")
-                    ds.metadata(metadata=self._cvSweepParams, group='/bts')
-                    bts_acquisition.append_device(device=d, pin=p, h5_storage=ds, clean=True)
+            self._dataPath = base_path
 
-                for d, p in zip(contaminated_devices, contaminated_pins):
-                    h5_name = os.path.join(relative_path,
-                                           '{0}_{1}-contaminated.h5'.format(params['contaminated_wafer_id'], d))
-                    ds = datastorage.H5Store(h5_name)
-                    metadata = params
-                    metadata['device_id'] = d
-                    ds.metadata(metadata=metadata, group="/bts")
-                    bts_acquisition.append_device(device=d, pin=p, h5_storage=ds, clean=False)
-
-                self._btsAcquisitions.append(bts_acquisition)
             self._print('Loaded acquisition parameters successfully.', level='INFO')
+            h5_name = os.path.join(self._dataPath, '{0}_{1}.h5'.format(self._fileTag, time_stamp))
+            ds: DLCPDataStore = dh5.DLCPDataStore(file_path=h5_name)
+            metadata = self._dlcpParams
+            metadata['file_tag'] = self._fileTag
+            ds.metadata(metadata=metadata, group="/dlcp")
+            self._dlcpDataStore = ds
 
-    def _get_bts_metadata(self, section_name: str):
-        if not isinstance(section_name, str):
-            raise TypeError('The argument should be an instance of str.')
-        config: configparser.ConfigParser = self._measurementConfig
-        options = dict(config.items(section=section_name))
-        options['stress_voltage'] = float(options['stress_voltage'])
-        options['stress_temperature'] = float(options['stress_temperature'])
-        options['max_stress_time'] = float(options['max_stress_time'])
-        options['stress_interval'] = float(options['stress_interval'])
-        options['temperature_sampling_interval'] = float(options['temperature_sampling_interval'])
-        options['thickness'] = float(options['thickness'])
+    def start_dlcp(self) -> int:
+        """
+        Starts the DLCP acquisition.
 
-        return options
+        1. Loads the acquisition parameters from the _dlcpParams class property.
+        2. Iterates over all the nominal biases
+        3. Saves the data on the _dlcpDataStore
 
-    def _validate_config(self, config: configparser.ConfigParser, required_options) -> bool:
+        Returns
+        -------
+        int:
+            0 if the measurement was interrupted
+            1 if it was successful.
+        """
+        ds = self._dlcpDataStore
+        dlcp_params = self._dlcpParams
+        nb_start = float(dlcp_params['nominal_bias_start'])
+        nb_step = float(dlcp_params['nominal_bias_step'])
+        nb_stop = float(dlcp_params['nominal_bias_stop'])
+        osc_level_start = float(dlcp_params['osc_level_start'])
+        osc_level_step = float(dlcp_params['osc_level_step'])
+        osc_level_stop = float(dlcp_params['osc_level_stop'])
+        freq = float(dlcp_params['frequency'])
+        integration_time = dlcp_params['integration_time']
+        noa = int(dlcp_params['number_of_averages'])
+        # Iterate from nominal bias start to nominal bias stop
+        nb_scan = np.arange(start=nb_start, stop=nb_stop+nb_step, step=nb_step)
+        for i, nb in enumerate(nb_scan):
+            data = self._impedanceAnalyzer.dlcp_sweep(nominal_bias=nb, osc_start=osc_level_start,
+                                                      osc_step=osc_level_step, osc_stop=osc_level_stop,
+                                                      frequency=freq, integration_time=integration_time,
+                                                      noa=noa)
+            ds.save_dlcp(dlcp_data=data, nominal_bias=nb)
+            if self.abort:
+                self.abort = False
+                return 0
+        return 1
+
+    def cv_sweep(self, voltage_start: float, voltage_step: float, voltage_stop: float, frequency: float,
+                 **kwargs):
+        """
+        Runs a capacitance-voltage sweep and saves it to the h5 data store.
+
+        Parameters
+        ----------
+        voltage_start: float
+            The start DC bias (V)
+        voltage_step: float
+            The step DC bias (V)
+        voltage_stop: float
+            The stop DC bias (V)
+        frequency: float
+            The AC frequency
+        kwargs:
+            keyword arguments passed to `impedance_analyzer.cv_sweep' method.
+        """
+        data = self._impedanceAnalyzer.cv_sweep(voltage_start=voltage_start,
+                                                voltage_step=voltage_step,
+                                                voltage_stop=voltage_stop,
+                                                frequency=frequency, **kwargs)
+        self._dlcpDataStore.save_cv(cv_data=data)
+        sweep_params = {
+            'voltage_start': voltage_start,
+            'voltage_step': voltage_step,
+            'voltage_stop': voltage_stop,
+            'frequency': frequency
+        }
+
+        for k, v in kwargs.items():
+            sweep_params[k] = v
+
+        self._dlcpDataStore.metadata(metadata=sweep_params, group='/cv')
+
+    def _validate_config(self, config: configparser.ConfigParser, required_options: dict) -> bool:
+        """
+        Validate the configuration based on an agreed set of rules
+
+        Parameters
+        ----------
+        config: configparser.ConfigParser
+            The configuration parsed from an .ini file
+        required_options: dict
+            A dictionary with the rules
+        Returns
+        -------
+        bool
+            True if the configuration meets the rules defined in required options. False otherwise
+        """
         if not isinstance(config, configparser.ConfigParser):
             raise TypeError('The configuration argument must be an instance of configparser.ConfigParser.')
         for section in required_options:
-            if section == 'arduino' or section == 'hotplate' or section == "bts":
-                n = self._testUnits + 1
-                section_units = ['{0}{1:d}'.format(section, i) for i in range(1, n)]
-                for s in section_units:
-                    if config.has_section(s):
-                        for o in required_options[section]:
-                            if not config.has_option(s, o):
-                                msg = 'Config file must have option \'{0}\' for section \'{1}\''.format(o, s)
-                                raise errors.SystemConfigError(message=msg, test_units=self._testUnits)
-                    else:
-                        msg = "Config file must have section '{0}'.".format(s)
-                        raise errors.SystemConfigError(message=msg, test_units=self._testUnits)
+            if config.has_section(section):
+                for o in required_options[section]:
+                    if not config.has_option(section, o):
+                        msg = 'Config file must have option \'{0}\' for section \'{1}\''.format(o, section)
+                        self._print(msg=msg, level="ERROR")
+                        raise errors.ConfigurationError(message=msg)
             else:
-                if config.has_section(section):
-                    for o in required_options[section]:
-                        if not config.has_option(section, o):
-                            msg = 'Config file must have option \'{0}\' for section \'{1}\''.format(o, section)
-                            raise errors.SystemConfigError(message=msg, test_units=self._testUnits)
-                else:
-                    msg = "Config file must have section '{0}'.".format(section)
-                    raise errors.SystemConfigError(message=msg, test_units=self._testUnits)
+                msg = "Config file must have section '{0}'.".format(section)
+                raise errors.ConfigurationError(message=msg)
         return True
 
     def resource_available(self, resource_address: str):
+        """
+        Checks if the specified resource is available through the pyvisa connection
+
+        Parameters
+        ----------
+        resource_address: str
+            The address of the resource
+
+        Returns
+        -------
+        bool
+            True if the resource exists in the list of available resources, false otherwise.
+        """
         if resource_address not in self._availableResources:
             return False
         return True
 
     def init_impedance_analyzer(self):
+        """
+        Tries to create the impedance analyzer pyvisa object and open the connection to it.
+
+        Raises
+        ------
+        errors.InstrumentError:
+            If the address to the pyvisa resource for the impedance analyzer is not available.
+        """
         address = self._systemConfig.get(section='impedance_analyzer', option='address')
         name = self._systemConfig.get(section='impedance_analyzer', option='name')
         if not self.resource_available(resource_address=address):
@@ -558,69 +268,82 @@ class Controller:
 
         self._impedanceAnalyzer = ia.ImpedanceAnalyzer(address=address, resource_manager=self._resourceManager)
 
-    def init_keithley(self):
-        address = self._systemConfig.get(section='keithley', option='address')
-        name = self._systemConfig.get(section='keithley', option='name')
-        if not self.resource_available(resource_address=address):
-            msg = 'The Keithley source-meter is not available at address \'{0}\''.format(address)
-            raise errors.InstrumentError(address=address, resource_name=name, message=msg)
-        self._keithley = keithley.Keithley(address=address, resource_manager=self._resourceManager)
-
-    def init_arduino_boards(self):
-        for i in range(self._testUnits):
-            section_name = 'arduino{0:d}'.format(i)
-            address = self._systemConfig.get(section=section_name, option='address')
-            name = self._systemConfig.get(section=section_name, option='name')
-            all_options = dict(self._systemConfig.items(section=section_name))
-            pin_mappings = {
-                'keithley': all_options['pin_keithley'],
-                'fan': all_options['pin_fan']
-            }
-            import re
-            pattern = re.compile(r'pin(\d+)')
-            for o in all_options:
-                match = re.match(pattern=pattern, string=o)
-                if match:
-                    pin = int(match.groups()[0])
-                    pin_mappings[pin] = all_options[o]
-            if self.resource_available(resource_address=address):
-                self._arduinos.append(arduino_board.ArduinoBoard(address=address, name=name,
-                                                                 pin_mappings=pin_mappings))
-            else:
-                msg = 'The arduino board \'{0}\' was not found in address: \'{1}\''.format(name, address)
-                raise errors.InstrumentError(address=address, resource_name=name, message=msg)
-
-    def init_hotplates(self, calibration_file: str):
-        calibration = configparser.ConfigParser()
-        calibration.read(calibration_file)
-
-        for i in range(self._testUnits):
-            section_name = 'hotplate{0:d}'.format(i)
-            address: str = self._systemConfig.get(section=section_name, option='address')
-            name: str = self._systemConfig.get(section=section_name, option='name')
-            if self.resource_available(resource_address=address):
-                hp = hotplate.Hotplate(address=address, name=name)
-                hp.load_calibration(calibration)
-                self._hotPlates.append(hp)
-            else:
-                msg = "The hotplate '{0}' was not found in address: '{1}'".format(name, address)
-                raise errors.InstrumentError(address=address, resource_name=name, message=msg)
-
     @staticmethod
     def _read_json_file(filename: str):
+        """
+        Reads the json file containing the rules to validate the configuration.
+
+        Parameters
+        ----------
+        filename: str
+            The full name to the json file containing the validation rules.
+
+        Returns
+        -------
+        json:
+            The json data in the file
+        """
         file = open(filename, 'r')
         json_data = json.load(file)
         file.close()
         return json_data
 
-    @staticmethod
-    def _create_path(path: str):
+    def _create_path(self, path: str, overwrite: bool = True):
+        """
+        Creates a folder in the selected path. If the folder exists and the overwrite flag is set to False, it appends
+        a consecutive number to the path.
+
+        Parameters
+        ----------
+        path: str
+            The path to be created (if it does not exist)
+        overwrite: bool
+            If set to true and the folder exists, it will not try to create a folder. Otherwise, it will append a
+            consecutive integer to te path and try to create it.
+
+        Returns
+        -------
+        str:
+            The newly created path
+        """
         if not os.path.exists(path):
             os.makedirs(path)
+            return path
+        elif not overwrite:
+            relative_name = os.path.basename(path)
+            parent_dir = os.path.dirname(path)
+            p = re.compile(r'{0}\d*'.format(relative_name))
+            paths = [f for f in os.listdir(parent_dir) if p.match(f)]
+            n_paths = len(paths)
+            new_path = '{0}_{1:d}'.format(path,n_paths)
+            self._create_path(path=new_path, overwrite=True)
+            return new_path
+        else:
+            return path
 
     @staticmethod
     def _create_logger(path: str, name: str = 'experiment_logger',
-                       level: [str, int] = 'CRITICAL', console: bool = False) -> logging.Logger:
+                       level: [str, int] = 'DEBUG', console: bool = False) -> logging.Logger:
+        """
+        Creates an instance of logging.Logger saving the logs to the specified file.
+
+        Parameters
+        ----------
+        path: str
+            The folder to store the log file in
+        name:str
+            The name to identify the logger. Default: 'experiment_logger'.
+        level:str
+            The threshold level for the logs (default 'DEBUG')
+        console: bool
+            True if allowing output to the console as well.
+
+        Returns
+        -------
+        logging.Logger:
+            The logger instance
+
+        """
         experiment_logger = logging.getLogger(name)
         experiment_logger.setLevel(level)
         filename = 'progress.log'
@@ -642,7 +365,46 @@ class Controller:
 
         return experiment_logger
 
-    def _print(self, msg: str, level="INFO"):
+    @property
+    def impedance_analyzer_address(self) -> str:
+        address = self._systemConfig.get(section='impedance_analyzer', option='address')
+        return address
+
+    @property
+    def impedance_analyzer_resource_name(self) -> str:
+        name = self._systemConfig.get(section='impedance_analyzer', option='name')
+        return name
+
+    def connect_devices(self):
+        if self._impedanceAnalyzer is not None:
+            self._impedanceAnalyzer.connect()
+        else:
+            msg = 'Error connecting to the impedance analyzer.'
+            raise errors.InstrumentError(address=self.impedance_analyzer_address,
+                                         resource_name=self.impedance_analyzer_resource_name,
+                                         msg=msg)
+
+    def disconnect_devices(self):
+        if self._impedanceAnalyzer is not None:
+            self._impedanceAnalyzer.disconnect()
+
+    def __del__(self):
+        try:
+            self.disconnect_devices()
+        except Exception as e:
+            self._print(msg='Error disconnecting devices.', level='ERROR')
+
+    def _print(self, msg: str, level="DEBUG"):
+        """
+        Handles the output messages for the class
+
+        Parameters
+        ----------
+        msg: str
+            The message to be output
+        level: str
+            The level of the message (DEBUG, INFO, ERROR, CRITICAL). Only used if a logger has been specified.
+        """
         level_no = self._loggingLevels[level]
         if self._mainLogger is None:
             print(msg)
