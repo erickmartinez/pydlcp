@@ -47,7 +47,7 @@ class Controller:
     _measurementConfig: configparser.ConfigParser = None
 
     def __init__(self, config_file_url: str = None, **kwargs):
-        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp')
+        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp/pydlcp')
         if config_file_url is None:
             config_file_url = os.path.join(cwd, 'dlcp_hardware_config.ini')
         elif not isinstance(config_file_url, str):
@@ -116,7 +116,10 @@ class Controller:
 
             base_path = self._create_path(base_path)
             # Create main logger
-            self._mainLogger = self._create_logger(base_path, name='Main Logger', level='CRITICAL', console=True)
+            self._mainLogger: logging.Logger = self._create_logger(base_path, name='Main Logger',
+                                                                   level='DEBUG', console=True)
+            if self._impedanceAnalyzer is not None:
+                self._impedanceAnalyzer.set_logger(logger=self._mainLogger)
 
             if self.debug:
                 self._print('Created base path at {0}'.format(base_path))  # No logger yet...
@@ -159,6 +162,8 @@ class Controller:
         # Iterate from nominal bias start to nominal bias stop
         nb_scan = np.arange(start=nb_start, stop=nb_stop+nb_step, step=nb_step)
         for i, nb in enumerate(nb_scan):
+            progress_str = 'Acquiring capacitance for Nominal Bias = {0:.3f} V'.format(nb)
+            self._print(progress_str)
             data = self._impedanceAnalyzer.dlcp_sweep(nominal_bias=nb, osc_start=osc_level_start,
                                                       osc_step=osc_level_step, osc_stop=osc_level_stop,
                                                       frequency=freq, integration_time=integration_time,
@@ -203,6 +208,7 @@ class Controller:
             sweep_params[k] = v
 
         self._dlcpDataStore.metadata(metadata=sweep_params, group='/cv')
+        return data
 
     def _validate_config(self, config: configparser.ConfigParser, required_options: dict) -> bool:
         """
@@ -267,6 +273,8 @@ class Controller:
             raise errors.InstrumentError(address=address, resource_name=name, message=msg)
 
         self._impedanceAnalyzer = ia.ImpedanceAnalyzer(address=address, resource_manager=self._resourceManager)
+        if self._mainLogger is not None:
+            self._impedanceAnalyzer.set_logger(logger=self._mainLogger)
 
     @staticmethod
     def _read_json_file(filename: str):
@@ -344,7 +352,7 @@ class Controller:
             The logger instance
 
         """
-        experiment_logger = logging.getLogger(name)
+        experiment_logger: logging.Logger = logging.getLogger(name)
         experiment_logger.setLevel(level)
         filename = 'progress.log'
         log_file = os.path.join(path, filename)
@@ -379,10 +387,8 @@ class Controller:
         if self._impedanceAnalyzer is not None:
             self._impedanceAnalyzer.connect()
         else:
-            msg = 'Error connecting to the impedance analyzer.'
-            raise errors.InstrumentError(address=self.impedance_analyzer_address,
-                                         resource_name=self.impedance_analyzer_resource_name,
-                                         msg=msg)
+            self.init_impedance_analyzer()
+            self._impedanceAnalyzer.connect()
 
     def disconnect_devices(self):
         if self._impedanceAnalyzer is not None:
