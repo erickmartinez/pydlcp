@@ -397,7 +397,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                 os.makedirs(data_dir)
             filename = 'dlcp_D{0:d}_{1:.3}.csv'.format(device_id, nb)
             print('Runnig DLCP for nominal bias = {0:.3f}'.format(nb))
-            dlcp_data = self.dlcp_sweep(nominal_bias=nb, start_amplitude=0.01, step_amplitude=0.01, stop_amplitude=1.0,
+            dlcp_data = self.dlcp_sweep(nominal_bias=nb, start_amplitude=0.05, step_amplitude=0.05, stop_amplitude=1.0,
                                         frequency=1E6, noa=8, integration_time='ITM2')
             df = pd.DataFrame(data=dlcp_data)
             df.to_csv(os.path.join(data_dir, filename))
