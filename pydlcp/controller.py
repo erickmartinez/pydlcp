@@ -399,13 +399,12 @@ class Controller:
             self.disconnect_devices()
         except Exception as e:
             self._print(msg='Error disconnecting devices.', level='ERROR')
-            # remove the log handlers
-            handlers = self._mainLogger.handlers[:]
-            for h in handlers:
-                h.close()
-                self._mainLogger.removeHandler(h)
-            self._mainLogger = None
-
+        # remove the log handlers
+        handlers = self._mainLogger.handlers[:]
+        for h in handlers:
+            h.close()
+            self._mainLogger.removeHandler(h)
+        self._mainLogger = None
 
     def _print(self, msg: str, level="DEBUG"):
         """
