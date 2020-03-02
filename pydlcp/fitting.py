@@ -5,7 +5,7 @@ from scipy.linalg import norm
 from typing import List
 import h5py
 import datetime
-import confidence as cf
+import pydlcp.confidence as cf
 import matplotlib.gridspec as gridspec
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -16,11 +16,12 @@ dlcp_type = np.dtype([('osc_level', 'd'), ('bias', 'd'), ('nominal_bias', 'd'), 
 
 class Fitting:
 
-    _nominal_biases: List[float] = []
+    _nominal_biases: np.ndarray = None
 
-    def __init__(self, h5_file: str, electrode_area_mm: float):
-        self._h5File: h5py.File = h5_file
+    def __init__(self, h5_file: str, electrode_area_mm: float, electrode_area_error_mm: float = 0.0):
+        self._h5File: str = h5_file
         self._electrode_area_mm: float = electrode_area_mm
+        self._electrode_area_error_mm: float = electrode_area_error_mm
         with h5py.File(h5_file) as hf:
             dlcp_ds = hf['dlcp']
             nb_start = float(dlcp_ds.attrs['nominal_bias_start'])
@@ -32,7 +33,6 @@ class Fitting:
         if index < 0 or index > len(self._nominal_biases):
             raise ValueError('The index is out of bounds for the nominal bias.')
         ds_name = 'sweep_{0}'.format(index)
-        data = None
         with h5py.File(self._h5File, 'r') as hf:
             dlcp_ds = hf['dlcp']
             data = np.array(dlcp_ds[ds_name], dtype=dlcp_type)
@@ -45,16 +45,9 @@ class Fitting:
         ----------
         index: int
             The index at which the data is fitted
-
-        Returns
-        -------
-
         """
-
-        diameter_mm = 1
-        area_mm = 1
-        area_cm = area_mm * 1E-2
-        area_cm_err = 0.0
+        area_cm = self._electrode_area_mm * 1E-2
+        area_cm_err = self._electrode_area_error_mm * 1E-2
 
         color_palette = 'winter'
 
@@ -89,7 +82,7 @@ class Fitting:
         osc_level = data['osc_level']
         capacitance = data['capacitance']
 
-        res = least_squares(self.fun, np.array([1.0, 1.0, 0.0, 0.0]), jac=self.fun_jac,
+        res = least_squares(self.fobj, np.array([1.0, 1.0, 0.0, 0.0]), jac=self.fun_jac,
                             args=(osc_level, capacitance),
                             xtol=all_tol,
                             ftol=all_tol,
@@ -182,6 +175,7 @@ class Fitting:
             else:
                 raise ValueError('The dataset \'{0}\' already existed in \'{1}\''.format(ds_name, group_name))
 
+
     def model(self, x: [float,np.ndarray], b: np.ndarray):
         """
             A polynomial model for the capacitance
@@ -200,7 +194,8 @@ class Fitting:
             """
         return b[0] + b[1] * x + b[2] * np.power(x, 2) + b[3] * np.power(x, 3)
 
-    def fun(self, b: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+
+    def fobj(self, b: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
         A polynomial model for the capacitance
 
@@ -256,7 +251,8 @@ class Fitting:
 
         return x
 
-    def n_dl(self, c0: float, c1: float, er: float, area_cm: float):
+    @staticmethod
+    def n_dl(c0: float, c1: float, er: float, area_cm: float):
         """
         Estimates the drive level from the fitted values C0 and C1
 
@@ -282,6 +278,6 @@ class Fitting:
         # q = 1.6021766208e-19
 
         qe = er * 8.854187817620389 * 1.6021766208  # x 1E-33
-        ndl = -1.0E9 * np.power(c0, 3.0) / (2 * qe * area_cm * c1)
+        ndl = -1.0E9 * np.power(c0, 3.0) / (2.0 * qe * area_cm * c1)
 
         return ndl
