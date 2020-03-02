@@ -42,9 +42,9 @@ class DynamicMplCanvas(MplCanvas):
     def compute_initial_figure(self):
         self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
 
-    def update_figure(self):
-        # Build a list of 4 random integers between 0 and 10 (both inclusive)
-        pass
+        def update_figure(self):
+            # Build a list of 4 random integers between 0 and 10 (both inclusive)
+            pass
 
 
 #        self.axes.cla()

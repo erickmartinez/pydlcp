@@ -4,7 +4,7 @@ from datetime import datetime
 
 vcr_type = np.dtype([('V', 'd'), ('C', 'd'), ('R', 'd')])
 tti_type = np.dtype([('time', 'd'), ('temperature', 'd'), ('current', 'd')])
-dlcp_type = np.dtype([('osc_level', 'd'), ('bias', 'd'), ('nominal_bias', 'd'), ('V', 'd'), ('C', 'd'), ('R', 'd')])
+dlcp_type = np.dtype([('osc_level', 'd'), ('bias', 'd'), ('nominal_bias', 'd'), ('V', 'd'), ('C', 'd')])
 
 
 class DLCPDataStore:

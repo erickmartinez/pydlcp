@@ -190,7 +190,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         program += "'80 OSC={2:.4f};FREQ={3:.3E};BIAS={4:.4f}',"  # AC Amplitude (V), Frequency (Hz) & Bias (V)
         program += "'90 START={4:.3f};STOP={4:.3f}',"
         program += "'100 MANUAL={4:.4f}; NOP=2',"
-        program += "'110 DTIME=100',"  # Delay time set to 100 ms
+        program += "'110 DTIME=0',"  # Delay time set to 100 ms
         program += "'120 SHT1',"  # Short Calibration set to On
         program += "'130 OPN1',"  # Open Calibration set to On
         program += "'140 AUTO',"  # Auto-Scale A & B
@@ -239,7 +239,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
             1, 2, 4, 8, 16, 32, 64, 128, 256
         """
         integration_time = kwargs.get('integration_time', 'ITM1')
-        number_of_averages = kwargs.get('noa', 1)
+        number_of_averages = kwargs.get('noa', 2)
 
         if integration_time not in self._integrationTime:
             raise ValueError("Valid values for integration time are '{0}'".format(self._integrationTime))
@@ -265,11 +265,11 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                                               bias)
             # self._print(program)
             self.write(program)
-            time.sleep(1)
+            time.sleep(0.1)
             response = self.query('RUN')
-            time.sleep(1)
-            # print(response)
-            data = self.parse_dlcp_data(response, 20)
+            time.sleep(0.1)
+            # self._print(response)
+            data = self.parse_dlcp_data(response, 2)
             self.write('FNC2')
 
             results[i] = (ac_level, bias, nominal_bias, data['V'][0], data['C'][0])
@@ -313,7 +313,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                             usecols=(1, 2, 3, 4),
                             dtype={'names': ('V', 'C', 'unit_factor_c', 'R'),
                                    'formats': ('d', 'd', 'U1', 'd')},
-                            max_rows=points)
+                            max_rows=(points))
 
         factors_c = [self._multipliers[m] for m in values['unit_factor_c']]
 
@@ -397,7 +397,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                 os.makedirs(data_dir)
             filename = 'dlcp_D{0:d}_{1:.3}.csv'.format(device_id, nb)
             print('Runnig DLCP for nominal bias = {0:.3f}'.format(nb))
-            dlcp_data = self.dlcp_sweep(nominal_bias=nb, start_amplitude=0.01, step_amplitude=0.01, stop_amplitude=1.0,
+            dlcp_data = self.dlcp_sweep(nominal_bias=nb, start_amplitude=0.05, step_amplitude=0.05, stop_amplitude=1.0,
                                         frequency=1E6, noa=8, integration_time='ITM2')
             df = pd.DataFrame(data=dlcp_data)
             df.to_csv(os.path.join(data_dir, filename))

@@ -150,6 +150,7 @@ class ArduinoBoard:
         """
         if self._boardConnected:
             self._activePins = []
+            self.connect_keithley()
             self._board.close()
             self._boardConnected = False
         else:

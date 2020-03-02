@@ -105,6 +105,7 @@ class VisaInstrument:
     def query(self, q: str):
         """
         Send a query to the impedance analyzer
+
         Parameters
         ----------
         q: str
@@ -157,7 +158,7 @@ class VisaInstrument:
         Warning
             If the logger is not an instance of logging.Logger
         """
-        if isinstance(logger, logging.Logger):
+        if isinstance(logger, logging.Logger) and logger is not None:
             self._logger = logger
         else:
             msg: str = 'The logger should be an instance of \'logging.Logger\'.'
