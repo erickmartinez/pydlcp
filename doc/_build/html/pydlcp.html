@@ -855,33 +855,113 @@ bias stress.</p>
 <span id="pydlcp-controller-module"></span><h2>pydlcp.controller module<a class="headerlink" href="#module-pydlcp.controller" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pydlcp.controller.Controller">
-<em class="property">class </em><code class="sig-prename descclassname">pydlcp.controller.</code><code class="sig-name descname">Controller</code><span class="sig-paren">(</span><em class="sig-param">config_file_url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pydlcp.controller.</code><code class="sig-name descname">Controller</code><span class="sig-paren">(</span><em class="sig-param">config_file_url: str = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class provides methods to control a DLCP experiment and save the results to a h5 data store.</p>
+<dl class="attribute">
+<dt id="pydlcp.controller.Controller.abort">
+<code class="sig-name descname">abort</code><em class="property"> = False</em><a class="headerlink" href="#pydlcp.controller.Controller.abort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.connect_devices">
+<code class="sig-name descname">connect_devices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.connect_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="pydlcp.controller.Controller.cv_sweep">
 <code class="sig-name descname">cv_sweep</code><span class="sig-paren">(</span><em class="sig-param">voltage_start: float</em>, <em class="sig-param">voltage_step: float</em>, <em class="sig-param">voltage_stop: float</em>, <em class="sig-param">frequency: float</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.cv_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a capacitance-voltage sweep and saves it to the h5 data store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voltage_start</strong> (<em>float</em>) – The start DC bias (V)</p></li>
+<li><p><strong>voltage_step</strong> (<em>float</em>) – The step DC bias (V)</p></li>
+<li><p><strong>voltage_stop</strong> (<em>float</em>) – The stop DC bias (V)</p></li>
+<li><p><strong>frequency</strong> (<em>float</em>) – The AC frequency</p></li>
+<li><p><strong>kwargs</strong> – keyword arguments passed to <a href="#id1"><span class="problematic" id="id2">`</span></a>impedance_analyzer.cv_sweep’ method.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.disconnect_devices">
+<code class="sig-name descname">disconnect_devices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.disconnect_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.impedance_analyzer_address">
+<em class="property">property </em><code class="sig-name descname">impedance_analyzer_address</code><a class="headerlink" href="#pydlcp.controller.Controller.impedance_analyzer_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.controller.Controller.impedance_analyzer_resource_name">
+<em class="property">property </em><code class="sig-name descname">impedance_analyzer_resource_name</code><a class="headerlink" href="#pydlcp.controller.Controller.impedance_analyzer_resource_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pydlcp.controller.Controller.init_impedance_analyzer">
 <code class="sig-name descname">init_impedance_analyzer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.init_impedance_analyzer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tries to create the impedance analyzer pyvisa object and open the connection to it.</p>
+<p>:raises errors.InstrumentError:: If the address to the pyvisa resource for the impedance analyzer is not available.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pydlcp.controller.Controller.load_test_config">
 <code class="sig-name descname">load_test_config</code><span class="sig-paren">(</span><em class="sig-param">config: configparser.ConfigParser</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.load_test_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load the acquisition settings. Follows</p>
+<ol class="arabic simple">
+<li><p>Loads the configuration object</p></li>
+</ol>
+<p>2. Validates the configuration settings using the rules provided by the constructor (default rules are in
+./dlcp_system_config_required_options.json).
+3. If valid, creates the data structure for the measurement.
+4. Creates a data storage object that will ouput the data to an h5 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>configparser.ConfigParser</em>) – The configuration settings as read from the ini file specified on the constructor</p>
+</dd>
+</dl>
+<p>:raises TypeError:: If the config argument is not an instance of configparser.ConfigParser</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pydlcp.controller.Controller.resource_available">
 <code class="sig-name descname">resource_available</code><span class="sig-paren">(</span><em class="sig-param">resource_address: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.resource_available" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checks if the specified resource is available through the pyvisa connection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resource_address</strong> (<em>str</em>) – The address of the resource</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the resource exists in the list of available resources, false otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="pydlcp.controller.Controller.start_dlcp">
-<code class="sig-name descname">start_dlcp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.controller.Controller.start_dlcp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">start_dlcp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pydlcp.controller.Controller.start_dlcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the DLCP acquisition.</p>
+<ol class="arabic simple">
+<li><p>Loads the acquisition parameters from the _dlcpParams class property.</p></li>
+<li><p>Iterates over all the nominal biases</p></li>
+<li><p>Saves the data on the _dlcpDataStore</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>0 if the measurement was interrupted
+1 if it was successful.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1710,7 +1790,7 @@ defined in _waitTime</p>
 <dt>
 <code class="sig-name descname">dlcp_sweep(self, nominal_bias: float, start_amplitude: float, step_amplitude: float, stop_amplitude: float,</code></dt>
 <dd><blockquote>
-<div><p>frequency: float, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</p>
+<div><p>frequency: float, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)</p>
 </div></blockquote>
 <p>Tries to run a drive-level capacitance profiling CV measurement program in the impedance analyzer. If the
 instrument is busy running another measurement, wait the specified amount of seconds defined in _waitTime.</p>
@@ -1730,7 +1810,7 @@ class</p>
 
 <dl class="method">
 <dt>
-<code class="sig-name descname">cv_sweep</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray</dt>
+<code class="sig-name descname">cv_sweep</code><span class="sig-paren">(</span><em class="sig-param">voltage_start: float</em>, <em class="sig-param">voltage_step: float</em>, <em class="sig-param">voltage_stop: float</em>, <em class="sig-param">frequency: float</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray</dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2077,6 +2157,11 @@ class</p>
 <code class="sig-name descname">_print</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">msg:str</em>, <em class="sig-param">level:str</em><span class="sig-paren">)</span><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument._print" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints a message with either python’s ‘print’ function or the logger provided in ‘set_logger’</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="pydlcp.visa_instrument.VisaInstrument.address">
+<em class="property">property </em><code class="sig-name descname">address</code><a class="headerlink" href="#pydlcp.visa_instrument.VisaInstrument.address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt>
