@@ -47,7 +47,7 @@ class Controller:
     _measurementConfig: configparser.ConfigParser = None
 
     def __init__(self, config_file_url: str = None, **kwargs):
-        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp/pydlcp')
+        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp')
         if config_file_url is None:
             config_file_url = os.path.join(cwd, 'dlcp_hardware_config.ini')
         elif not isinstance(config_file_url, str):
@@ -323,7 +323,7 @@ class Controller:
             p = re.compile(r'{0}\d*'.format(relative_name))
             paths = [f for f in os.listdir(parent_dir) if p.match(f)]
             n_paths = len(paths)
-            new_path = '{0}_{1:d}'.format(path,n_paths)
+            new_path = '{0}_{1:d}'.format(path, n_paths)
             self._create_path(path=new_path, overwrite=True)
             return new_path
         else:
@@ -399,12 +399,18 @@ class Controller:
             self.disconnect_devices()
         except Exception as e:
             self._print(msg='Error disconnecting devices.', level='ERROR')
-        # remove the log handlers
-        handlers = self._mainLogger.handlers[:]
-        for h in handlers:
-            h.close()
-            self._mainLogger.removeHandler(h)
-        self._mainLogger = None
+            self._print(e.message)
+        finally:
+            if self._mainLogger is not None:
+                # remove the log handlers
+                try:
+                    handlers = self._mainLogger.handlers[:]
+                    for h in handlers:
+                        h.close()
+                        self._mainLogger.removeHandler(h)
+                except Exception as e:
+                    print(e.message)
+                self._mainLogger = None
 
     def _print(self, msg: str, level="DEBUG"):
         """

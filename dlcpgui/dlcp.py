@@ -7,5 +7,6 @@ from dlcpgui.dlcp_widgets import DynamicMplCanvas, CVDialogPopUp, MainWindow
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
+    app.aboutToQuit.connect(window.exit_handler)
     window.show()
     app.exec()

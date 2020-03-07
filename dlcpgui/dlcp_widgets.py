@@ -299,6 +299,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.validate_fields()
         except Exception as e:
             print('Error saving the application state: Invalid parameters')
+            print(e)
         finally:
             config = configparser.ConfigParser()
             config['state'] = {'current_folder': self.plainTextEdit_SaveFolder.toPlainText()}
@@ -359,6 +360,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         osc_level_delta = self.doubleSpinBox_OscLevelStop.value() - self.doubleSpinBox_OscLevelStart.value()
         nb_delta = self.doubleSpinBox_NominalBiasStop.value() - self.doubleSpinBox_NominalBiasStart.value()
 
+        self._validFields = True
         if self.doubleSpinBox_OscLevelStep.value() > abs(osc_level_delta):
             msg = "Invalid value for the oscillator level step."
             error_dialog = QtWidgets.QErrorMessage(self)
@@ -377,7 +379,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.clear_field_errors()
             self._validFields = True
 
-    def field_error(self, field: QtWidgets.QWidget):
+    @staticmethod
+    def field_error(field: QtWidgets.QWidget):
         field.setStyleSheet('border: 1px solid #ff0000;')
         field.setFocus()
 
@@ -385,5 +388,5 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.doubleSpinBox_OscLevelStep.setStyleSheet("")
         self.doubleSpinBox_NominalBiasStep.setStyleSheet("")
 
-    def __del__(self):
+    def exit_handler(self):
         self.save_state()
