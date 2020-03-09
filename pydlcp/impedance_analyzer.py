@@ -49,6 +49,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         Parses the ASCII response from the Impedance Analyzer into the python compound type vcr_type defined in this
         class
     """
+    _circuits = ['CsRs', 'CpRp']
     # The integration time.
     # ITM1: 500 us
     # ITM2: 5 ms
@@ -182,7 +183,7 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         program = 'PROG'
         program += "'10 FNC1',"  # Impedance Measurement
         program += "'20 SWM2',"  # Single Sweep
-        program += "'30 IMP5',"  # Cs-Rs circuit
+        program += "'30 {5}',"  # Cs-Rs circuit
         program += "'40 SWP2',"  # DC Bias Sweep
         program += "'50 SWD1',"  # Sweep direction up
         program += "'60 {0}',"  # The integration time
@@ -240,6 +241,11 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
         """
         integration_time = kwargs.get('integration_time', 'ITM1')
         number_of_averages = kwargs.get('noa', 2)
+        circuit = kwargs.get('circuit', 'CsRs')
+        if circuit == 'CsRs':
+            circuit_code = 'IMP5'
+        else:
+            circuit_code = 'IMP20'
 
         if integration_time not in self._integrationTime:
             raise ValueError("Valid values for integration time are '{0}'".format(self._integrationTime))
@@ -249,6 +255,9 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
 
         if number_of_averages not in self._noa:
             raise ValueError('Invalid number of averages.')
+
+        if circuit not in self._circuits:
+            raise ValueError('Invalid circuit: {0}'.format(circuit))
 
         ac_levels = np.arange(osc_start, osc_stop + osc_step, osc_step)
         n_levels = len(ac_levels)
@@ -262,7 +271,8 @@ class ImpedanceAnalyzer(vi.VisaInstrument):
                                               number_of_averages,
                                               ac_level,
                                               frequency,
-                                              bias)
+                                              bias,
+                                              circuit_code)
             # self._print(program)
             self.write(program)
             time.sleep(0.1)
