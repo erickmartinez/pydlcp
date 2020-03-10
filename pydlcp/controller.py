@@ -355,7 +355,7 @@ class Controller:
         self._loggerName = name
         experiment_logger: logging.Logger = logging.getLogger(name)
         experiment_logger.setLevel(level)
-        filename = 'progress.log'
+        filename = os.path.splitext(os.path.basename(self._fileTag))[0] + '.log'
         log_file = os.path.join(path, filename)
         # create file handler which logs even critical messages
         fh = logging.FileHandler(log_file)
