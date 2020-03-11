@@ -60,12 +60,12 @@ class DataPlotter:
 
     def prepare_color_map(self, color_palette: str = 'winter'):
         # Find the number of nominal bias stored in the file
-        npoints = self._h5DataStore.count_data_sets(path='/dlcp')
-        biases = np.empty(npoints)
-        for i in range(npoints):
+        n_points = self._h5DataStore.count_data_sets(path='/dlcp')
+        biases = np.empty(n_points)
+        for i in range(n_points):
             ds_name = '/dlcp/sweep_{0:d}'.format(i)
             metadata = self._h5DataStore.get_metadata(group=ds_name)
-            biases = float(metadata['nominal_bias'])
+            biases[i] = float(metadata['nominal_bias'])
             # Create a color map
         self._colorNorm = mpl.colors.Normalize(vmin=np.amin(biases), vmax=np.amax(biases))
         self._colorMap = mpl.cm.get_cmap(color_palette)
