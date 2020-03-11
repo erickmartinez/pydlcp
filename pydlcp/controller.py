@@ -161,6 +161,7 @@ class Controller:
         noa = int(dlcp_params['number_of_averages'])
         # Iterate from nominal bias start to nominal bias stop
         nb_scan = np.arange(start=nb_start, stop=nb_stop + nb_step, step=nb_step)
+        ds.metadata(metadata=dlcp_params, group='/dlcp')
         for i, nb in enumerate(nb_scan):
             progress_str = 'Acquiring capacitance for Nominal Bias = {0:.3f} V'.format(nb)
             self._print(progress_str)
