@@ -146,7 +146,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.label_SystemStatus.setText('Running')
                 self.statusbar.showMessage('Measuring...')
                 try:
-                    success = self._controller.start_dlcp()
+                    self._controller.start_dlcp()
                 except (errors.InstrumentError, errors.ConfigurationError, errors.DLCPSystemConfigError) as e:
                     error_dialog = QtWidgets.QErrorMessage(self)
                     error_dialog.setWindowModality(QtCore.Qt.WindowModal)

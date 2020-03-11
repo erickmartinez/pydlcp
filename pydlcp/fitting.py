@@ -19,7 +19,7 @@ class Fitting:
         self._h5File: str = h5_file
         self._electrode_area_mm: float = electrode_area_mm
         self._electrode_area_error_mm: float = electrode_area_error_mm
-        with h5py.File(h5_file) as hf:
+        with h5py.File(h5_file, 'r') as hf:
             dlcp_ds = hf['dlcp']
             nb_start = float(dlcp_ds.attrs['nominal_bias_start'])
             nb_step = float(dlcp_ds.attrs['nominal_bias_step'])
