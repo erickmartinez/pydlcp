@@ -8,7 +8,7 @@ import logging
 import pyvisa
 from pydlcp import arduino_board, hotplate, errors, impedance_analyzer as ia, DLCPDataStore as dh5, bts
 import platform
-from typing import List
+from typing import List, Union
 
 # Different data type definitions
 from pydlcp.DLCPDataStore import DLCPDataStore
@@ -43,11 +43,11 @@ class Controller:
                       'WARNING': logging.WARNING,
                       'ERROR': logging.ERROR,
                       'CRITICAL': logging.CRITICAL}
-    _mainLogger: logging.Logger = None
+    _loggerName: str = None
     _measurementConfig: configparser.ConfigParser = None
 
     def __init__(self, config_file_url: str = None, **kwargs):
-        cwd = os.path.join(os.path.dirname(os.getcwd()), 'pydlcp')
+        cwd = os.path.join(os.getcwd(), 'pydlcp')
         if config_file_url is None:
             config_file_url = os.path.join(cwd, 'dlcp_hardware_config.ini')
         elif not isinstance(config_file_url, str):
@@ -116,10 +116,9 @@ class Controller:
 
             base_path = self._create_path(base_path)
             # Create main logger
-            self._mainLogger: logging.Logger = self._create_logger(base_path, name='Main Logger',
-                                                                   level='DEBUG', console=True)
+            self._create_logger(base_path, name='experiment_logger', level='DEBUG', console=True)
             if self._impedanceAnalyzer is not None:
-                self._impedanceAnalyzer.set_logger(logger=self._mainLogger)
+                self._impedanceAnalyzer.set_logger(logger_name=self._loggerName)
 
             if self.debug:
                 self._print('Created base path at {0}'.format(base_path))  # No logger yet...
@@ -150,6 +149,7 @@ class Controller:
         """
         ds = self._dlcpDataStore
         dlcp_params = self._dlcpParams
+        circuit = dlcp_params['circuit']
         nb_start = float(dlcp_params['nominal_bias_start'])
         nb_step = float(dlcp_params['nominal_bias_step'])
         nb_stop = float(dlcp_params['nominal_bias_stop'])
@@ -160,14 +160,14 @@ class Controller:
         integration_time = dlcp_params['integration_time']
         noa = int(dlcp_params['number_of_averages'])
         # Iterate from nominal bias start to nominal bias stop
-        nb_scan = np.arange(start=nb_start, stop=nb_stop+nb_step, step=nb_step)
+        nb_scan = np.arange(start=nb_start, stop=nb_stop + nb_step, step=nb_step)
         for i, nb in enumerate(nb_scan):
             progress_str = 'Acquiring capacitance for Nominal Bias = {0:.3f} V'.format(nb)
             self._print(progress_str)
             data = self._impedanceAnalyzer.dlcp_sweep(nominal_bias=nb, osc_start=osc_level_start,
                                                       osc_step=osc_level_step, osc_stop=osc_level_stop,
                                                       frequency=freq, integration_time=integration_time,
-                                                      noa=noa)
+                                                      noa=noa, circuit=circuit)
             ds.save_dlcp(dlcp_data=data, nominal_bias=nb)
             if self.abort:
                 self.abort = False
@@ -273,8 +273,8 @@ class Controller:
             raise errors.InstrumentError(address=address, resource_name=name, message=msg)
 
         self._impedanceAnalyzer = ia.ImpedanceAnalyzer(address=address, resource_manager=self._resourceManager)
-        if self._mainLogger is not None:
-            self._impedanceAnalyzer.set_logger(logger=self._mainLogger)
+        if self._loggerName is not None:
+            self._impedanceAnalyzer.set_logger(logger_name=self._loggerName)
 
     @staticmethod
     def _read_json_file(filename: str):
@@ -329,9 +329,8 @@ class Controller:
         else:
             return path
 
-    @staticmethod
-    def _create_logger(path: str, name: str = 'experiment_logger',
-                       level: [str, int] = 'DEBUG', console: bool = False) -> logging.Logger:
+    def _create_logger(self, path: str, name: str = 'experiment_logger',
+                       level: Union[str, int] = 'DEBUG', console: bool = False):
         """
         Creates an instance of logging.Logger saving the logs to the specified file.
 
@@ -345,16 +344,11 @@ class Controller:
             The threshold level for the logs (default 'DEBUG')
         console: bool
             True if allowing output to the console as well.
-
-        Returns
-        -------
-        logging.Logger:
-            The logger instance
-
         """
+        self._loggerName = name
         experiment_logger: logging.Logger = logging.getLogger(name)
         experiment_logger.setLevel(level)
-        filename = 'progress.log'
+        filename = os.path.splitext(os.path.basename(self._fileTag))[0] + '.log'
         log_file = os.path.join(path, filename)
         # create file handler which logs even critical messages
         fh = logging.FileHandler(log_file)
@@ -370,8 +364,6 @@ class Controller:
             ch.setLevel(level=level)
             ch.setFormatter(formatter)
             experiment_logger.addHandler(ch)
-
-        return experiment_logger
 
     @property
     def impedance_analyzer_address(self) -> str:
@@ -399,18 +391,19 @@ class Controller:
             self.disconnect_devices()
         except Exception as e:
             self._print(msg='Error disconnecting devices.', level='ERROR')
-            self._print(e.message)
+            self._print(str(e))
         finally:
-            if self._mainLogger is not None:
+            if self._loggerName is not None:
                 # remove the log handlers
+                experiment_logger: logging.Logger = logging.getLogger(self._loggerName)
                 try:
-                    handlers = self._mainLogger.handlers[:]
+                    handlers = experiment_logger.handlers[:]
                     for h in handlers:
                         h.close()
-                        self._mainLogger.removeHandler(h)
+                        experiment_logger.removeHandler(h)
                 except Exception as e:
-                    print(e.message)
-                self._mainLogger = None
+                    print(e)
+                self._loggerName = None
 
     def _print(self, msg: str, level="DEBUG"):
         """
@@ -424,7 +417,8 @@ class Controller:
             The level of the message (DEBUG, INFO, ERROR, CRITICAL). Only used if a logger has been specified.
         """
         level_no = self._loggingLevels[level]
-        if self._mainLogger is None:
+        if self._loggerName is None:
             print(msg)
-        elif isinstance(self._mainLogger, logging.Logger):
-            self._mainLogger.log(level_no, msg)
+        else:
+            experiment_logger: logging.Logger = logging.getLogger(self._loggerName)
+            experiment_logger.log(level_no, msg)

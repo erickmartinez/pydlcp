@@ -14,7 +14,7 @@ class VisaInstrument:
         The pyvisa resource
     _isConnected: bool
         True if the instrument has been connected, false otherwise
-    _logger: logging.Logger
+    _loggerName: str
         A logger specified by python's logger module
     _resourceAddress: str
         The address of the instrument
@@ -40,7 +40,7 @@ class VisaInstrument:
     """
     _instrument: pyvisa.Resource = None
     _isConnected: bool = False
-    _logger: logging.Logger = None
+    _loggerName: str = None
     _loggingLevels: dict = {'NOTSET': logging.NOTSET,
                             'DEBUG': logging.DEBUG,
                             'INFO': logging.INFO,
@@ -146,23 +146,15 @@ class VisaInstrument:
                 values = self._instrument.query_ascii_values(q)
         return values
 
-    def set_logger(self, logger: logging.Logger):
+    def set_logger(self, logger_name: str):
         """
         Parameters
         ----------
-        logger: logging.Logger
+        logger_name: str
             The logger to handle the system messages
 
-        Raises
-        ------
-        Warning
-            If the logger is not an instance of logging.Logger
         """
-        if isinstance(logger, logging.Logger) and logger is not None:
-            self._logger = logger
-        else:
-            msg: str = 'The logger should be an instance of \'logging.Logger\'.'
-            raise Warning(msg)
+        self._loggerName = logger_name
 
     def _print(self, msg: str, level="INFO"):
         """
@@ -175,10 +167,11 @@ class VisaInstrument:
             The level of the message
         """
         level_no = self._loggingLevels[level]
-        if self._logger is None:
+        if self._loggerName is None:
             print(msg)
-        elif isinstance(self._logger, logging.Logger):
-            self._logger.log(level_no, msg)
+        else:
+            experiment_logger: logging.Logger = logging.getLogger(self._loggerName)
+            experiment_logger.log(level_no, msg)
 
     @property
     def address(self) -> str:

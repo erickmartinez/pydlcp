@@ -1,5 +1,6 @@
 {
   "dlcp" : [
+    "circuit",
     "integration_time",
     "number_of_averages",
     "osc_level_start",
