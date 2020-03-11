@@ -167,7 +167,7 @@ class Controller:
             data = self._impedanceAnalyzer.dlcp_sweep(nominal_bias=nb, osc_start=osc_level_start,
                                                       osc_step=osc_level_step, osc_stop=osc_level_stop,
                                                       frequency=freq, integration_time=integration_time,
-                                                      noa=noa, circuit=circuit)
+                                                      noa=noa, circuit=circuit, noa=1)
             ds.save_dlcp(dlcp_data=data, nominal_bias=nb)
             if self.abort:
                 self.abort = False
