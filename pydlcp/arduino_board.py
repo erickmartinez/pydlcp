@@ -174,7 +174,7 @@ class ArduinoBoard:
                 self._activePins.remove('keithley')
         else:
             msg = 'Keithley was already connected to {0} - {1}'.format(self._name, self._address)
-            raise Warning(msg)
+            self._print(msg)
 
     def disconnect_keithley(self):
         """
@@ -193,7 +193,7 @@ class ArduinoBoard:
             self._keithleyConnected = False
         else:
             msg = 'Keithley was already disconnected from {0} - {1}'.format(self._name, self._address)
-            raise Warning(msg)
+            self._print(msg)
 
     @property
     def keithley_connected(self) -> bool:
